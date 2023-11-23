@@ -1,0 +1,132 @@
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+}
+
+.navbar__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 calc(24px / 2) 0 0;
+    height: 72px;
+}
+.navbar__container {
+    display: flex;
+    align-items: center;
+}
+.navbar__brand {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 0 32px;
+    height: 72px;
+    width: 252px;
+}
+.navbar__brand-logo {
+    width: 72px;
+}
+
+.navigation__brand-title {
+    color: #fefefe;
+    font-size: 12px;
+}
+
+/* #region : navbar search*/
+
+.navbar__search {
+    padding: calc(32px / 2) 0;
+}
+
+.navbar__search-wrap {
+    position: relative;
+    padding: 0 32px;
+    background-color: #f1f5f7;
+    border-radius: 30px;
+}
+
+.navbar__search-input {
+    background-color: #f1f5f7;
+    border: none;
+    height: 44px;
+    display: block;
+    width: 100%;
+    padding: 0 16px;
+    color: #505d69;
+    appearance: none;
+}
+
+.navbar__search-input:focus {
+    outline: none;
+}
+
+.navbar__search-icon {
+    position: absolute;
+    font-size: 18px;
+    line-height: 44px;
+    left: 18px;
+    top: 0;
+    color: #74788d;
+}
+
+/* #region : list dropdown*/
+
+.navbar__dropdown-btn {
+    height: 70px;
+    box-shadow: none;
+    color: #636e75;
+    border: 0;
+    border-radius: 0;
+    font-size: 24px;
+}
+
+.navbar__dropdown-menu {
+    display: none;
+    -webkit-box-shadow: 0 5px 12px rgb(0 0 0 / 10%);
+    box-shadow: 0 5px 12px rgb(0 0 0 / 10%);
+    -webkit-animation-name: DropDownSlide;
+    animation-name: DropDownSlide;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    margin: 0;
+    position: absolute;
+    z-index: 10;
+}
+
+.dropdown__menu {
+    position: absolute;
+    z-index: 1000;
+    display: none;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #505d69;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 0 solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
+
+.user-avatar {
+    height: 60px;
+    width: 60px;
+}
+
+.user-avatar > img {
+    border-radius: 50%;
+}
+
+.vertical__menu {
+    background-color: #11101b;
+    width: 252px;
+}
