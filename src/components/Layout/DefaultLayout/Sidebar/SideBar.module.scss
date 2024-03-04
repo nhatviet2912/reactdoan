@@ -1,0 +1,52 @@
+.leftbar__wrap {
+    padding: 12px 0 32px 0;
+}
+
+.leftbar {
+    position: fixed;
+    top: 72px;
+    bottom: 0;
+    background-color: #11101b;
+    width: 252px;
+}
+
+.leftbar__title {
+    padding: 12px 20px !important;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    cursor: default;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    color: #505d69;
+    font-weight: 600;
+    opacity: 0.5;
+}
+
+.leftbar__item {
+    display: flex;
+    align-items: center;
+    height: 52px;
+}
+
+.leftbar__item-separation {
+    border-bottom: 1px solid rgb(255, 255, 255);
+    border-bottom-width: 50%;
+}
+
+.leftbar__item > a {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    height: 100%;
+    width: 100%;
+    padding: 12px 24px;
+    color: #74788d;
+    position: relative;
+    -webkit-transition: all 0.4s;
+    font-weight: 500;
+}
+
+.leftbar__item > a > p {
+    margin-left: 1.6rem;
+    // min-width: 20px;
+}
