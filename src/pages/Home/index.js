@@ -1,9 +1,24 @@
 import classNames from 'classnames/bind';
 import styles from '../../assets/css/main.module.scss';
+import { FaPlus } from 'react-icons/fa6';
+
+import Button from '~/components/Button';
+import Input from '~/components/Input';
+import FormModal from '~/components/Form';
+import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
 function Home() {
+    let titleModal = 'Chương trình hệ đào tạo';
+    let labelArray = ['Mã hệ đào tạo:', 'Tên hệ đào tạo:', 'Phòng ban:', 'Mô tả'];
+
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
     return (
         <div className={cx('main-content')}>
             <div className={cx('page__title')}>
@@ -13,30 +28,20 @@ function Home() {
                 <div className={cx('training')}>
                     <div className={cx('table__card')}>
                         <div className={cx('manager__container')}>
-                            <div className={cx('add__btn')}>
-                                <a href="#" className={cx('btn btn--success')}><i className="fal fa-plus"></i>Thêm chuyên ngành</a>
-                            </div>
+                            <Button btn__success effect onClick={() => setModalOpen(true)}>
+                                <div className={cx('d-flex-center', 'px-4')}>
+                                    <FaPlus />
+                                    Thêm chuyên ngành
+                                </div>
+                            </Button>
                         </div>
 
-                        <div className={cx('control-data manager__container')}>
-                            <div className={cx('select__data-lenght')}>
-                                <label>Hiển thị 
-                                    <select className={cx('form-control')}>
-                                        <option value="10">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select> bản ghi
-                                </label>
-                            </div>
-
-                            <div className="filter__data">
-                                <label>Tìm kiếm:<input type="search" className={cx('form-control')} placeholder="" aria-controls="DataTables_Table_0" /></label>
-                            </div>
+                        <div className={cx('control-data')} style={{ width: '25%' }}>
+                            <Input classNames="filter__data" textLabel="Tìm kiếm:"></Input>
                         </div>
 
                         <div className={cx('manager__container table-data')}>
-                            <table className={cx('table table__data')}>
+                            <table className={cx('table', 'table__data')}>
                                 <thead>
                                     <tr className={cx('table__data-tr')}>
                                         <th className={cx('table__data-th')}>Mã chuyên ngành</th>
@@ -51,6 +56,15 @@ function Home() {
                     </div>
                 </div>
             </section>
+
+            {modalOpen && (
+                <FormModal
+                    title={titleModal}
+                    onSubmit={null}
+                    onClose={handleCloseModal}
+                    labelsInput={labelArray}
+                ></FormModal>
+            )}
         </div>
     );
 }
