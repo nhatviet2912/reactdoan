@@ -11,6 +11,8 @@ function Button({
     dropdown__btn = false,
     btn__success = false,
     btn__primary = false,
+    btn__warning = false,
+    btn__muted = false,
     children,
     onClick,
 }) {
@@ -31,6 +33,8 @@ function Button({
         dropdown__btn,
         btn__success,
         btn__primary,
+        btn__warning,
+        btn__muted,
     });
 
     return (

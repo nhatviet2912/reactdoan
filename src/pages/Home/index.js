@@ -5,7 +5,9 @@ import { FaPlus } from 'react-icons/fa6';
 import Button from '~/components/Button';
 import Input from '~/components/Input';
 import FormModal from '~/components/Form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Message from '~/components/Message';
+import DepartmentService from '~/service/DepartmentService';
 
 const cx = classNames.bind(styles);
 
@@ -14,10 +16,26 @@ function Home() {
     let labelArray = ['Mã hệ đào tạo:', 'Tên hệ đào tạo:', 'Phòng ban:', 'Mô tả'];
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState(false);
+    const [dataReponse, setData] = useState([]);
 
     const handleCloseModal = () => {
         setModalOpen(false);
     };
+
+    const handleCloseMess = () => {
+        setModalMessage(false);
+    };
+
+    useEffect(() => {
+        getAllDepartments();
+    }, []);
+
+    async function getAllDepartments() {
+        const getAllData = await DepartmentService.getAllDepartments();
+        console.log(getAllData);
+        setData(getAllData.data);
+    }
 
     return (
         <div className={cx('main-content')}>
@@ -46,11 +64,21 @@ function Home() {
                                     <tr className={cx('table__data-tr')}>
                                         <th className={cx('table__data-th')}>Mã chuyên ngành</th>
                                         <th className={cx('table__data-th')}>Tên chuyên ngành</th>
-                                        <th className={cx('table__data-th')}>Tình trạng</th>
                                         <th className={cx('table__data-th')}>Mô tả</th>
                                         <th className={cx('table__data-th')}>Thao tác</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    {dataReponse.length > 0 &&
+                                        dataReponse.map((item) => (
+                                            <tr key={item.Id}>
+                                                <td>{item.DepartmentCode}</td>
+                                                <td>{item.DepartmentName}</td>
+                                                <td>{item.Descriptions}</td>
+                                                {/* <td>{item.DepartmentName}</td> */}
+                                            </tr>
+                                        ))}
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -65,6 +93,8 @@ function Home() {
                     labelsInput={labelArray}
                 ></FormModal>
             )}
+
+            {modalMessage && <Message onClose={handleCloseMess}></Message>}
         </div>
     );
 }
