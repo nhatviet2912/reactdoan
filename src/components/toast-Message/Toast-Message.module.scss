@@ -1,0 +1,104 @@
+.toast-message {
+    position: fixed;
+    right: 36px;
+    bottom: 100px;
+    filter: drop-shadow(0 4px 40px rgba(0, 0, 0, 0.078));
+    z-index: 30;
+}
+.toast-success {
+    border: 1px solid green !important;
+}
+.toast-error {
+    border: 1px solid red !important;
+}
+.total {
+    background-color: #fff;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+}
+.total + .total {
+    margin-top: 16px;
+}
+.total-error,
+.total-sussces {
+    max-width: 450px;
+    height: 56px;
+    visibility: visible;
+}
+.total-info {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    column-gap: 10px;
+}
+.total-close {
+    column-gap: 16px;
+    display: flex;
+    align-items: center;
+}
+.total-info_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.total-info_text p {
+    font-size: 14px;
+    font-weight: 400;
+    /* color: #50B83C; */
+    color: var(--color-text-table);
+}
+.total-info_text p span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-btn-action);
+}
+.total-close_icon {
+    padding: 18px 0;
+    color: #666666;
+}
+.total-close p {
+    margin-left: 36px;
+    /* padding: 18px 16px; */
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: underline;
+}
+.total-close p:hover,
+.total-close_icon {
+    cursor: pointer;
+}
+
+.total-erro {
+    max-width: 650px;
+}
+.info-error i {
+    color: #de3618;
+}
+.info_text-erro p {
+    color: #de3618;
+    max-width: 82%;
+}
+.help {
+    text-decoration: underline;
+}
+.total-warning {
+    max-width: 498px;
+}
+.total-warning > i {
+    color: #f49342;
+}
+.text-warning p {
+    color: #f49342;
+}
+.total-pass {
+    max-width: 472px;
+}
+.total-passed i {
+    color: rgb(0, 158, 235);
+}
+.text-passed p {
+    color: rgb(0, 158, 235);
+}
