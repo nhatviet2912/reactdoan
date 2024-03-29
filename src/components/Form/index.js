@@ -3,20 +3,21 @@ import styles from './Form.module.scss';
 import { IoClose } from 'react-icons/io5';
 import Input from '../Input';
 import Button from '../Button';
+import Select from '../Select';
 import { useRef, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function FormModal({ title, onSubmit, onClose, labelsInput }) {
+function FormModal({ title, onSubmit, onClose, labelsInput, dataById, dataSelect, nameOption }) {
+    const titleButton = dataById !== null ? 'Cập nhập' : 'Thêm mới';
     const modalRef = useRef(null);
+    const [formData, setFormData] = useState(dataById || {});
 
     const handleClickOutside = (e) => {
         if (!modalRef.current.contains(e.target)) {
             onClose();
         }
     };
-
-    const [formData, setFormData] = useState({});
 
     const handleInputChange = (name, value) => {
         setFormData({
@@ -27,7 +28,7 @@ function FormModal({ title, onSubmit, onClose, labelsInput }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        onSubmit(formData);
+        onSubmit(formData, dataById !== null);
     };
 
     return (
@@ -45,16 +46,28 @@ function FormModal({ title, onSubmit, onClose, labelsInput }) {
 
                 <div className={cx('manager__container', 'modal__body')}>
                     <form className={cx('form')} onSubmit={handleSubmit}>
-                        {labelsInput.map((label, index) => (
-                            <Input
-                                key={index}
-                                classNames="filter__data"
-                                textLabel={label.title}
-                                onChange={(value) => handleInputChange(label.name, value)}
-                            />
-                        ))}
+                        {labelsInput.map((label, index) =>
+                            label.isSelect ? (
+                                <Select
+                                    key={index}
+                                    options={dataSelect}
+                                    label={label.title}
+                                    onSelect={(value) => handleInputChange(label.name, value)}
+                                    labelKey={nameOption}
+                                    value={formData[label.name] || ''}
+                                />
+                            ) : (
+                                <Input
+                                    key={index}
+                                    classNames="filter__data"
+                                    textLabel={label.title}
+                                    value={formData[label.name] || ''}
+                                    onChange={(value) => handleInputChange(label.name, value)}
+                                />
+                            ),
+                        )}
 
-                        <Button btn__primary>Xác nhận</Button>
+                        <Button btn__primary>{titleButton}</Button>
                     </form>
                 </div>
             </div>

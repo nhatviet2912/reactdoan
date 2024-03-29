@@ -1,0 +1,120 @@
+.input__option {
+    width: 100%;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    color: #fefefe;
+    padding: 0 12px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.input__option:not(:last-child) {
+    border-bottom: 1px solid #ffff;
+}
+
+.input__option:hover {
+    background-color: #11101b;
+}
+
+.form__input-select {
+    width: 100%;
+    border: 1px solid #ced4da;
+    padding: 4px 12px;
+    margin-left: 0.3em;
+    margin-right: 0;
+    height: 33px;
+}
+.form__input-select:hover {
+    cursor: pointer;
+    background-color: #ced4da;
+}
+
+.form__input:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #d3d8de;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.form__input-disable {
+    background-color: #e9ecef;
+    opacity: 1;
+    cursor: no-drop;
+}
+
+.form__input--error {
+    border-color: #f46a6a;
+}
+
+.input__select {
+    position: relative;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.input__select.disabled {
+    overflow: hidden;
+}
+
+.input__select-icon {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.input__select-icon > i {
+    font-size: 8px;
+}
+
+.input__list-option {
+    background-color: #495cba;
+    position: absolute;
+    top: 38px;
+    width: 99%;
+    right: 1px;
+    z-index: 5;
+    overflow-y: scroll;
+    height: 160px;
+}
+
+.input__list-option.list-option__normal {
+    height: auto;
+    overflow: unset;
+}
+.form__item {
+    margin-bottom: 32px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    position: relative;
+    column-gap: 12px;
+}
+.form__label {
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    width: 20%;
+}
+.form-control {
+    width: 100%;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #505d69;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}

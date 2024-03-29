@@ -21,6 +21,7 @@ function Header() {
                                 alt="logo-it-utehy"
                             />
                         </a>
+                        <h3>AIACADEMY</h3>
                     </div>
 
                     <Button size effect dropdown__btn>
