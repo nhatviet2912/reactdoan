@@ -1,7 +1,7 @@
 .filter__data {
     padding: 4px 12px;
-    margin-left: 0.5em;
-    margin-right: 0;
+    // margin-left: 0.5em;
+    // margin-right: 0.5em;
 }
 
 .form-control {
@@ -34,4 +34,8 @@
     font-weight: 600;
     display: block;
     width: 20%;
+}
+
+.error-input {
+    border: 1px solid red;
 }

@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function Input({ type = 'text', classNames, placeholder, textLabel, onChange, value }) {
+function Input({ type = 'text', classNames, placeholder, textLabel, onChange, value, error }) {
     const classes = cx('form-control', classNames);
 
     const handleChange = (event) => {
@@ -15,13 +15,16 @@ function Input({ type = 'text', classNames, placeholder, textLabel, onChange, va
     return (
         <div className={cx('form__item')}>
             <label className={cx('text__no-wrap', 'form__label')}>{textLabel}</label>
-            <input
-                type={type}
-                className={cx(classes)}
-                placeholder={placeholder}
-                value={value}
-                onChange={handleChange}
-            />
+            <div className={cx('w-100')}>
+                <input
+                    type={type}
+                    className={cx(classes, { 'error-input': error })}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={handleChange}
+                />
+                <div className={cx('error-message')}>{error}</div>
+            </div>
         </div>
     );
 }

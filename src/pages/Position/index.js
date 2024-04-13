@@ -206,7 +206,7 @@ function Position() {
                                 <tbody>
                                     {dataReponse.length > 0 &&
                                         currentRecords.map((item) => (
-                                            <tr key={item.Id}>
+                                            <tr key={item.Id} onDoubleClickCapture={showFormEdit.bind(this, item.Id)}>
                                                 <td>{item.PositionCode}</td>
                                                 <td>{item.PositionName}</td>
                                                 <td>{item.DepartmentName}</td>

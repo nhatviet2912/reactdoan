@@ -191,7 +191,7 @@ function Home() {
                                 <tbody>
                                     {dataReponse.length > 0 &&
                                         currentRecords.map((item) => (
-                                            <tr key={item.Id}>
+                                            <tr key={item.Id} onDoubleClickCapture={showFormEdit.bind(this, item.Id)}>
                                                 <td>{item.DepartmentCode}</td>
                                                 <td>{item.DepartmentName}</td>
                                                 <td>{item.Descriptions}</td>

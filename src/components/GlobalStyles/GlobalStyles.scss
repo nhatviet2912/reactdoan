@@ -111,6 +111,16 @@ li {
     align-items: center;
 }
 
+.d-flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn_hover:hover {
+    background-color: #c7c8cc;
+}
+
 .px-4 {
     padding: 0 4px;
 }
@@ -121,6 +131,7 @@ li {
 
 ::-webkit-scrollbar {
     width: 6px;
+    height: 8px;
 }
 
 /* Track */
@@ -131,10 +142,35 @@ li {
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 10px;
+    border-radius: 6px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.label-dropdown {
+    margin: 24px;
+    font-weight: 500;
+    font-family: roboto;
+    font-size: 14px;
+}
+.dropdown {
+    margin-top: 8px;
+    width: 300px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: red;
+    position: absolute;
 }

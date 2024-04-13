@@ -8,13 +8,19 @@ import { useRef, useState } from 'react';
 
 const cx = classNames.bind(styles);
 
-function FormModal({ title, onSubmit, onClose, labelsInput, dataById, dataSelect, nameOption }) {
+function FormModal({ title, onSubmit, onClose, labelsInput, dataById, dataSelect, nameOption, errorMessage = {} }) {
     const titleButton = dataById !== null ? 'Cập nhập' : 'Thêm mới';
     const modalRef = useRef(null);
     const [formData, setFormData] = useState(dataById || {});
 
     const handleClickOutside = (e) => {
         if (!modalRef.current.contains(e.target)) {
+            onClose();
+        }
+    };
+
+    document.onkeydown = function (e) {
+        if (e.keyCode === 27) {
             onClose();
         }
     };
@@ -55,19 +61,27 @@ function FormModal({ title, onSubmit, onClose, labelsInput, dataById, dataSelect
                                     onSelect={(value) => handleInputChange(label.name, value)}
                                     labelKey={nameOption}
                                     value={formData[label.name] || ''}
+                                    error={errorMessage[label.name] || ''}
                                 />
                             ) : (
                                 <Input
+                                    type={label.type || 'text'}
                                     key={index}
                                     classNames="filter__data"
                                     textLabel={label.title}
                                     value={formData[label.name] || ''}
                                     onChange={(value) => handleInputChange(label.name, value)}
+                                    error={errorMessage[label.name] || ''}
                                 />
                             ),
                         )}
 
-                        <Button btn__primary>{titleButton}</Button>
+                        <div className={cx('d-flex-between')}>
+                            <Button btn__primary>{titleButton}</Button>
+                            <Button btn__muted onClick={() => onClose()}>
+                                Bỏ qua
+                            </Button>
+                        </div>
                     </form>
                 </div>
             </div>

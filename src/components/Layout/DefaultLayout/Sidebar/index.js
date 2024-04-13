@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAlignLeft, faSearch, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { FaRegUser, FaUserGraduate } from 'react-icons/fa';
+import { CiHome } from 'react-icons/ci';
 
 import styles from './SideBar.module.scss';
 
@@ -8,14 +8,19 @@ const cx = classNames.bind(styles);
 
 const data = [
     {
-        name: 'Quản lý phòng ban',
-        icon: faAlignLeft,
+        name: 'Phòng ban',
+        icon: <CiHome />,
         path: '/',
     },
     {
-        name: 'Quản lý chức vụ',
-        icon: faAlignLeft,
+        name: 'Chức vụ',
+        icon: <FaRegUser />,
         path: '/Position',
+    },
+    {
+        name: 'Nhân viên',
+        icon: <FaUserGraduate />,
+        path: '/Employee',
     },
 ];
 
@@ -28,7 +33,7 @@ function Sidebar() {
                     return (
                         <li className={cx('leftbar__item')} key={index}>
                             <a href={data.path}>
-                                <FontAwesomeIcon icon={data.icon} />
+                                {data.icon}
                                 <p>{data.name}</p>
                             </a>
                         </li>

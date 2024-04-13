@@ -26,6 +26,10 @@
         box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
 }
 
+.btn:hover {
+    opacity: 0.8;
+}
+
 /* #region : collapse menu icon*/
 
 .size {
@@ -79,7 +83,7 @@
     color: #fff;
     background-color: #1cbb8c;
     border-color: #1cbb8c;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
 }
 
 .btn__primary {
