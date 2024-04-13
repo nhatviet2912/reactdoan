@@ -140,7 +140,7 @@ function Home() {
     };
 
     const debouncedSearch = debounce(async (value) => {
-        if (value != '') {
+        if (value !== '') {
             const res = await DepartmentService.search(value);
             setData(res.data);
         } else {

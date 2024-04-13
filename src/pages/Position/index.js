@@ -154,7 +154,7 @@ function Position() {
     };
 
     const debouncedSearch = debounce(async (value) => {
-        if (value != '') {
+        if (value !== '') {
             const res = await PositionService.search(value);
             setData(res.data);
         } else {

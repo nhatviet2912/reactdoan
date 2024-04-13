@@ -140,6 +140,20 @@ class EmployeeService {
             });
         return response;
     }
+
+    async deleteMany(ids){
+        var response = await axios
+            .post(`${url}/deleteMany`, ids)
+            .then((res) => {
+                if(res.data){
+                    return res;
+                }
+            })
+            .catch((err) => {
+                return err
+            });
+        return response;
+    }
 }
 
 export default new EmployeeService();

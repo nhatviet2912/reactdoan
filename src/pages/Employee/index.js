@@ -77,6 +77,7 @@ function Employee() {
     const [dataSelectOption, setdataSelectOption] = useState({});
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
     const [errorMessage, setErrorMessage] = useState({});
+    const [checkedItems, setCheckedItems] = useState([]);
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -227,6 +228,19 @@ function Employee() {
         }
     };
 
+    const handleCheckboxChange = (itemId, isChecked) => {
+        if (isChecked) {
+            setCheckedItems((prevState) => [...prevState, itemId]);
+        } else {
+            setCheckedItems((prevState) => prevState.filter((id) => id !== itemId));
+        }
+    };
+
+    const handleDeleteMany = async () => {
+        console.log(checkedItems);
+        var response = await EmployeeService.deleteMany(checkedItems);
+    };
+
     const validateData = (data) => {
         const dataExample = {
             EmployeeCode: '',
@@ -330,6 +344,25 @@ function Employee() {
                             </div>
                         </div>
 
+                        {/* {checkedItems.length > 1 && (
+                            <div>
+                                <Button btn__warning onClick={handleDeleteMany}>
+                                    Xóa nhân viên
+                                </Button>
+                            </div>
+                        )} */}
+
+                        <div
+                            style={{
+                                visibility: checkedItems.length > 1 ? 'visible' : 'hidden',
+                                marginBottom: '16px',
+                            }}
+                        >
+                            <Button btn__warning onClick={handleDeleteMany}>
+                                Xóa nhân viên
+                            </Button>
+                        </div>
+
                         <div
                             className={cx('manager__container table-data')}
                             style={{ overflowX: 'scroll', height: '450px' }}
@@ -337,6 +370,7 @@ function Employee() {
                             <table className={cx('table', 'table__data')}>
                                 <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
+                                        <th style={{ minWidth: '50px' }}></th>
                                         <th className={cx('table__data-th')}>Mã nhân viên</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
                                             Tên nhân viên
@@ -359,7 +393,29 @@ function Employee() {
                                 <tbody>
                                     {dataReponse.length > 0 &&
                                         currentRecords.map((item) => (
-                                            <tr key={item.Id} onDoubleClickCapture={showFormEdit.bind(this, item.Id)}>
+                                            <tr
+                                                key={item.Id}
+                                                onDoubleClickCapture={(event) => {
+                                                    if (event.target.tagName !== 'INPUT') {
+                                                        showFormEdit(item.Id);
+                                                    }
+                                                }}
+                                                style={{
+                                                    backgroundColor: checkedItems.includes(item.Id)
+                                                        ? '#b9b9b9'
+                                                        : 'transparent',
+                                                }}
+                                            >
+                                                <td className={cx('d-flex-center')}>
+                                                    <input
+                                                        type="checkbox"
+                                                        value={item.Id}
+                                                        style={{ width: '24px', height: '24px' }}
+                                                        onChange={(e) =>
+                                                            handleCheckboxChange(item.Id, e.target.checked)
+                                                        }
+                                                    />
+                                                </td>
                                                 <td>{item.EmployeeCode}</td>
                                                 <td>{item.EmployeeName}</td>
                                                 <td>{item.PositionName}</td>
