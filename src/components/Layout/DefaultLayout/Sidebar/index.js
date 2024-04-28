@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
-import { FaRegUser, FaUserGraduate } from 'react-icons/fa';
+import { FaRegUser, FaUserGraduate, FaMoneyBillAlt, FaBook } from 'react-icons/fa';
 import { CiHome } from 'react-icons/ci';
+import { MdOutlineWork } from 'react-icons/md';
 
 import styles from './SideBar.module.scss';
 
@@ -21,6 +22,36 @@ const data = [
         name: 'Nhân viên',
         icon: <FaUserGraduate />,
         path: '/Employee',
+    },
+    {
+        name: 'Công tác',
+        icon: <MdOutlineWork />,
+        path: '/Work',
+    },
+    {
+        name: 'Chấm công',
+        icon: <MdOutlineWork />,
+        path: '/Attendance',
+    },
+    {
+        name: 'Quản lý lương',
+        icon: <FaMoneyBillAlt />,
+        path: '/Salary',
+    },
+    {
+        name: 'Hợp đồng',
+        icon: <FaBook />,
+        path: '/Contract',
+    },
+    {
+        name: 'Bảo hiểm',
+        icon: <MdOutlineWork />,
+        path: '/Benefits',
+    },
+    {
+        name: 'Khen thưởng kỷ luật',
+        icon: <MdOutlineWork />,
+        path: '/Attendance/DetailMonth',
     },
 ];
 

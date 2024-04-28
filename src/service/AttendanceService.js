@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-var url = `http://localhost:4000/employees`;
+var url = `http://localhost:4000/attendances`;
 var headers = new Headers({
     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 });
 
-class EmployeeService {
+class AttendanceService {
     async getAll() {
         var response = await axios
             .get(`${url}`)
@@ -40,30 +40,16 @@ class EmployeeService {
         return response;
     }
 
-    async post(data) {
+    async getWithMonth() {
         var response = await axios
-            .post(`${url}/create`, data)
+            .post(`${url}/getwithmonth`)
             .then((res) => {
                 if (res.data) {
                     return res.data;
                 }
             })
             .catch((error) => {
-                return error.response;
-            });
-        return response;
-    }
-
-    async put(id, data) {
-        var response = await axios
-            .put(`${url}/update/${id}`, data)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                return error.response;
+                console.log(error);
             });
         return response;
     }
@@ -113,9 +99,9 @@ class EmployeeService {
         return response;
     }
 
-    async exportData() {
+    async import(file) {
         var response = await axios
-            .get(`${url}/export`, { headers, responseType: 'arraybuffer' })
+            .post(`${url}/import`, file)
             .then((res) => {
                 if (res.data) {
                     return res.data;
@@ -127,9 +113,13 @@ class EmployeeService {
         return response;
     }
 
-    async getStatus(Status) {
+    async export(year, month, day, selectedValueStatus) {
+        var DepartmentId = selectedValueStatus;
         var response = await axios
-            .get(`${url}/status/${Status}`)
+            .get(`${url}/export/${year}/${month}/${day}/${DepartmentId}`, {
+                headers,
+                responseType: 'arraybuffer',
+            })
             .then((res) => {
                 if (res.data) {
                     return res.data;
@@ -137,23 +127,9 @@ class EmployeeService {
             })
             .catch((error) => {
                 return error.response;
-            });
-        return response;
-    }
-
-    async deleteMany(ids) {
-        var response = await axios
-            .post(`${url}/deleteMany`, ids)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((err) => {
-                return err.response;
             });
         return response;
     }
 }
 
-export default new EmployeeService();
+export default new AttendanceService();

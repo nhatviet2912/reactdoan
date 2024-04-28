@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce';
 import { FaPlus } from 'react-icons/fa6';
 import { FaCheckCircle, FaExclamationCircle, FaPen, FaFileExport } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { IoIosArrowDropdown } from 'react-icons/io';
 
 import Button from '~/components/Button';
 import Input from '~/components/Input';
@@ -68,7 +69,7 @@ const labelArray = [
 
 function Employee() {
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState({ show: false, title: '', message: '', Id: '' });
+    const [modalMessage, setModalMessage] = useState({ show: false, title: '', message: '', Id: '', Ids: [] });
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -78,6 +79,7 @@ function Employee() {
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
     const [errorMessage, setErrorMessage] = useState({});
     const [checkedItems, setCheckedItems] = useState([]);
+    var getEleCheckbox = document.querySelectorAll('#data-table input[type="checkbox"]');
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -148,7 +150,7 @@ function Employee() {
     };
 
     const handleCloseMess = () => {
-        setModalMessage({ show: false, title: '', message: '', Id: '' });
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
     };
 
     const showConfirm = (Id, Code) => {
@@ -158,6 +160,7 @@ function Employee() {
             title: `Xóa thông tin ${namePage}`,
             message: textMess,
             Id: Id,
+            Ids: [],
         });
     };
 
@@ -177,17 +180,23 @@ function Employee() {
     };
 
     const handleDelete = async (Id) => {
-        var res = await EmployeeService.delete(Id);
-        if (res.error === 0) {
-            getAll();
-            setModalMessage({ show: false, title: '', message: '', Id: '' });
-            setToastMessage({
-                show: true,
-                type: 'success',
-                message: 'Thao tác thành công.',
-                style: 'toast-success',
-            });
-        }
+        const res = await EmployeeService.delete(Id);
+        const successMessage = {
+            show: true,
+            type: 'success',
+            message: 'Thao tác thành công.',
+            style: 'toast-success',
+        };
+        const errorMessage = {
+            show: true,
+            type: 'error',
+            message: res.error === 0 ? 'Thao tác thành công.' : res.data.message,
+            style: res.error === 0 ? 'toast-success' : 'toast-error',
+        };
+
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+        setToastMessage(res.error === 0 ? successMessage : errorMessage);
+        if (res.error === 0) getAll();
     };
 
     const handleSearch = async (value) => {
@@ -236,9 +245,42 @@ function Employee() {
         }
     };
 
-    const handleDeleteMany = async () => {
-        console.log(checkedItems);
-        var response = await EmployeeService.deleteMany(checkedItems);
+    const showDeleteMany = () => {
+        var textMess = `Bạn có muốn xóa thông tin nhân viên đã chọn khỏi hệ thống?`;
+        setModalMessage({
+            show: true,
+            title: `Xóa thông tin ${namePage}`,
+            message: textMess,
+            Id: '',
+            Ids: checkedItems,
+        });
+    };
+
+    const handleDeleteMany = async (Ids) => {
+        const response = await EmployeeService.deleteMany(Ids);
+        const errorMessage = {
+            show: true,
+            type: 'error',
+            message: response.data.message,
+            style: 'toast-error',
+        };
+        const successMessage = {
+            show: true,
+            type: 'success',
+            message: 'Thao tác thành công.',
+            style: 'toast-success',
+        };
+
+        if (response.data.error === 1) {
+            setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+            setToastMessage(errorMessage);
+            return;
+        }
+        getAll();
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+        setToastMessage(successMessage);
+        setCheckedItems([]);
+        clearCheckbox();
     };
 
     const validateData = (data) => {
@@ -290,6 +332,12 @@ function Employee() {
         return newErrors;
     };
 
+    const clearCheckbox = () => {
+        getEleCheckbox.forEach((ele) => {
+            ele.checked = false;
+        });
+    };
+
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = dataReponse.slice(indexOfFirstRecord, indexOfLastRecord);
@@ -303,7 +351,7 @@ function Employee() {
             <section className={cx('firts-section')}>
                 <div className={cx('training')}>
                     <div className={cx('table__card')}>
-                        <div className={cx('d-flex-between')}>
+                        <div className={cx('d-flex-between')} style={{ marginTop: '8px' }}>
                             <Button btn__success effect onClick={() => setModalOpen(true)}>
                                 <div className={cx('d-flex-center', 'px-4')}>
                                     <FaPlus />
@@ -324,9 +372,10 @@ function Employee() {
                                     classNames="filter__data"
                                     textLabel="Tìm kiếm:"
                                     onChange={(value) => handleSearch(value)}
+                                    style={{ marginBottom: '0px' }}
                                 ></Input>
                             </div>
-                            <div style={{ marginBottom: '32px' }}>
+                            <div style={{ marginBottom: '0' }}>
                                 <label className={cx('label-dropdown')}>
                                     <span style={{ marginRight: '12px' }}>Trạng thái</span>
                                     <select
@@ -344,21 +393,13 @@ function Employee() {
                             </div>
                         </div>
 
-                        {/* {checkedItems.length > 1 && (
-                            <div>
-                                <Button btn__warning onClick={handleDeleteMany}>
-                                    Xóa nhân viên
-                                </Button>
-                            </div>
-                        )} */}
-
                         <div
                             style={{
                                 visibility: checkedItems.length > 1 ? 'visible' : 'hidden',
-                                marginBottom: '16px',
+                                marginBottom: '0',
                             }}
                         >
-                            <Button btn__warning onClick={handleDeleteMany}>
+                            <Button btn__warning onClick={showDeleteMany}>
                                 Xóa nhân viên
                             </Button>
                         </div>
@@ -367,7 +408,7 @@ function Employee() {
                             className={cx('manager__container table-data')}
                             style={{ overflowX: 'scroll', height: '450px' }}
                         >
-                            <table className={cx('table', 'table__data')}>
+                            <table className={cx('table', 'table__data')} id="data-table">
                                 <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
                                         <th style={{ minWidth: '50px' }}></th>
@@ -469,7 +510,13 @@ function Employee() {
                     title={modalMessage.title}
                     message={modalMessage.message}
                     onClose={handleCloseMess}
-                    onSuccess={() => handleDelete(modalMessage.Id)}
+                    onSuccess={() => {
+                        if (modalMessage.Ids.length > 0) {
+                            handleDeleteMany(modalMessage.Ids);
+                        } else {
+                            handleDelete(modalMessage.Id);
+                        }
+                    }}
                 ></Message>
             )}
 
