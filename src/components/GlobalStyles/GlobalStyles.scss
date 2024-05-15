@@ -117,6 +117,12 @@ li {
     align-items: center;
 }
 
+.d-flex-start {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
 .btn_hover:hover {
     background-color: #c7c8cc;
 }

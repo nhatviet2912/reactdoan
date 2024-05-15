@@ -7,7 +7,6 @@ import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 import Button from '~/components/Button';
 import ToastMessage from '~/components/toast-Message';
-// import Select from '~/components/Select';
 import Pagination from '~/components/Pagination';
 
 import { downloadFile } from '~/utils/helpers';
@@ -102,7 +101,9 @@ function Attendance() {
     async function getAll() {
         const result = await AttendanceService.getAll();
         setData(result.data);
-        setTitleHeader(result.data[0].attendances);
+        if (result.data.length > 0) {
+            setTitleHeader(result.data[0].attendances);
+        }
     }
 
     const indexOfLastRecord = currentPage * recordsPerPage;
@@ -113,7 +114,7 @@ function Attendance() {
     return (
         <div className={cx('main-content')}>
             <div className={cx('page__title')}>
-                <h4>Quản lý </h4>
+                <h4>Quản lý bảng công theo tuần</h4>
             </div>
             <section className={cx('firts-section')}>
                 <div className={cx('training')}>
@@ -159,85 +160,67 @@ function Attendance() {
                             />
                         </div>
 
-                        <div
-                            className={cx('d-flex-center')}
-                            style={{ margin: '12px 0', justifyContent: 'flex-end' }}
-                            onClick={() => {
-                                window.location.href = '/Attendance/DetailMonth';
-                            }}
-                        >
-                            <Button btn__success effect>
+                        <div className={cx('d-flex-center')} style={{ margin: '12px 0', justifyContent: 'flex-end' }}>
+                            <Button
+                                btn__success
+                                effect
+                                onClick={() => {
+                                    window.location.href = '/Attendance/DetailMonth';
+                                }}
+                            >
                                 Bảng công hàng tháng
                             </Button>
                         </div>
 
-                        <div
-                            className={cx('manager__container table-data')}
-                            style={{ overflowX: 'scroll', height: '450px' }}
-                        >
-                            <table className={cx('table', 'table__data')}>
-                                <thead>
-                                    <tr className={cx('table__data-tr')}>
-                                        <th className={cx('table__data-th')}>Mã nhân viên</th>
-                                        <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
-                                            Tên nhân viên
-                                        </th>
-                                        <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
-                                            Chức vụ
-                                        </th>
-                                        <th className={cx('table__data-th')}>Phòng ban</th>
-                                        {titleHeader.map((item, index) => (
-                                            <th
-                                                key={index}
-                                                style={{ minWidth: '100px' }}
-                                            >{`Ngày ${item.Day}/${item.Month} `}</th>
-                                        ))}
-                                        {/* <th className={cx('table__data-th')}>Thao tác</th> */}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {dataReponse.length > 0 &&
-                                        currentRecords.map((item, index) => (
-                                            <tr key={index}>
-                                                <td>{item.EmployeeCode}</td>
-                                                <td>{item.EmployeeName}</td>
-                                                <td>{item.PositionName}</td>
-                                                <td>{item.DepartmentName}</td>
-                                                {item.attendances.map((itemAttendance, index) => (
-                                                    <td key={index} style={{ textAlign: 'center' }}>
-                                                        {itemAttendance.Status === 0 ? 'x' : 'o'}
-                                                    </td>
-                                                ))}
-                                            </tr>
-                                        ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                        {dataReponse && dataReponse.length > 0 && (
+                            <div
+                                className={cx('manager__container table-data')}
+                                style={{ overflowX: 'scroll', height: '450px' }}
+                            >
+                                <table className={cx('table', 'table__data')}>
+                                    <thead>
+                                        <tr className={cx('table__data-tr')}>
+                                            <th className={cx('table__data-th')}>Mã nhân viên</th>
+                                            <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
+                                                Tên nhân viên
+                                            </th>
+                                            <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
+                                                Chức vụ
+                                            </th>
+                                            <th className={cx('table__data-th')}>Phòng ban</th>
+                                            {titleHeader.map((item, index) => (
+                                                <th
+                                                    key={index}
+                                                    style={{ minWidth: '100px' }}
+                                                >{`Ngày ${item.Day}/${item.Month} `}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {dataReponse.length > 0 &&
+                                            currentRecords.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td>{item.EmployeeCode}</td>
+                                                    <td>{item.EmployeeName}</td>
+                                                    <td>{item.PositionName}</td>
+                                                    <td>{item.DepartmentName}</td>
+                                                    {item.attendances.map((itemAttendance, index) => (
+                                                        <td key={index} style={{ textAlign: 'center' }}>
+                                                            {itemAttendance.Status === 0 ? 'x' : 'o'}
+                                                        </td>
+                                                    ))}
+                                                </tr>
+                                            ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        {dataReponse && dataReponse.length > 0 && (
+                            <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                        )}
                     </div>
                 </div>
             </section>
-
-            {/* {modalOpen && (
-                <FormModal
-                    title={titleModal}
-                    onSubmit={handleSubmit}
-                    onClose={handleCloseModal}
-                    labelsInput={labelArray}
-                    nameOption={nameSelectDepartment}
-                    dataById={dataById}
-                    dataSelect={dataSelectOption}
-                ></FormModal>
-            )}
-
-            {modalMessage.show && (
-                <Message
-                    title={modalMessage.title}
-                    message={modalMessage.message}
-                    onClose={handleCloseMess}
-                    onSuccess={() => handleDelete(modalMessage.Id)}
-                ></Message>
-            )} */}
 
             {toastMessage.show && (
                 <ToastMessage

@@ -58,3 +58,22 @@ export function downloadFile(data, fileName) {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
 }
+
+export function formatVND(number) {
+    return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+export function getWorkingDays(month, year) {
+    // Số ngày trong các tháng
+    const daysInMonth = new Date(year, month, 0).getDate();
+    let workingDays = 0;
+    // Lặp qua từng ngày trong tháng
+    for (let day = 1; day <= daysInMonth; day++) {
+        const currentDate = new Date(year, month - 1, day);
+        // Kiểm tra xem ngày đó là thứ 2 đến thứ 6
+        if (currentDate.getDay() >= 1 && currentDate.getDay() <= 5) {
+            workingDays++;
+        }
+    }
+    return workingDays;
+}

@@ -48,11 +48,6 @@ const data = [
         icon: <MdOutlineWork />,
         path: '/Benefits',
     },
-    {
-        name: 'Khen thưởng kỷ luật',
-        icon: <MdOutlineWork />,
-        path: '/Attendance/DetailMonth',
-    },
 ];
 
 function Sidebar() {
