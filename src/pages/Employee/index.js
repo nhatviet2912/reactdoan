@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 
 import { FaPlus } from 'react-icons/fa6';
-import { FaCheckCircle, FaExclamationCircle, FaPen, FaFileExport } from 'react-icons/fa';
+import { FaCheckCircle, FaExclamationCircle, FaPen, FaFileExport, FaUserAltSlash } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { IoIosArrowDropdown } from 'react-icons/io';
 
 import Button from '~/components/Button';
 import Input from '~/components/Input';
@@ -69,7 +68,14 @@ const labelArray = [
 
 function Employee() {
     const [modalOpen, setModalOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState({ show: false, title: '', message: '', Id: '', Ids: [] });
+    const [modalMessage, setModalMessage] = useState({
+        show: false,
+        title: '',
+        message: '',
+        Id: '',
+        Ids: [],
+        isUpdateStatus: false,
+    });
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -150,7 +156,7 @@ function Employee() {
     };
 
     const handleCloseMess = () => {
-        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
     };
 
     const showConfirm = (Id, Code) => {
@@ -161,6 +167,7 @@ function Employee() {
             message: textMess,
             Id: Id,
             Ids: [],
+            isUpdateStatus: false,
         });
     };
 
@@ -194,7 +201,7 @@ function Employee() {
             style: res.error === 0 ? 'toast-success' : 'toast-error',
         };
 
-        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
         setToastMessage(res.error === 0 ? successMessage : errorMessage);
         if (res.error === 0) getAll();
     };
@@ -246,13 +253,26 @@ function Employee() {
     };
 
     const showDeleteMany = () => {
-        var textMess = `Bạn có muốn xóa thông tin nhân viên đã chọn khỏi hệ thống?`;
+        var textMess = `Bạn có muốn xóa thông tin nhân viên đã chọn ra khỏi hệ thống?`;
         setModalMessage({
             show: true,
             title: `Xóa thông tin ${namePage}`,
             message: textMess,
             Id: '',
             Ids: checkedItems,
+            isUpdateStatus: false,
+        });
+    };
+
+    const showUpdateStatusMany = () => {
+        var textMess = `Bạn có muốn cho nghỉ việc các nhân viên đã chọn ra khỏi hệ thống?`;
+        setModalMessage({
+            show: true,
+            title: `Nhân việc nghỉ việc`,
+            message: textMess,
+            Id: '',
+            Ids: checkedItems,
+            isUpdateStatus: true,
         });
     };
 
@@ -272,12 +292,12 @@ function Employee() {
         };
 
         if (response.data.error === 1) {
-            setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+            setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
             setToastMessage(errorMessage);
             return;
         }
         getAll();
-        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
         setToastMessage(successMessage);
         setCheckedItems([]);
         clearCheckbox();
@@ -336,6 +356,73 @@ function Employee() {
         getEleCheckbox.forEach((ele) => {
             ele.checked = false;
         });
+    };
+
+    const handleUpdateStatus = async (status, e) => {
+        let response = await EmployeeService.updateStatus(status);
+        const errorMessage = {
+            show: true,
+            type: 'error',
+            message: response.data.message,
+            style: 'toast-error',
+        };
+        const successMessage = {
+            show: true,
+            type: 'success',
+            message: 'Thao tác thành công.',
+            style: 'toast-success',
+        };
+
+        if (response.data.error === 1) {
+            setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
+            setToastMessage(errorMessage);
+            return;
+        }
+        getAll();
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
+        setToastMessage(successMessage);
+    };
+
+    const handleUpdateStatusMany = async (Ids) => {
+        let response = await EmployeeService.updateStatusMany(Ids);
+
+        const errorMessage = {
+            show: true,
+            type: 'error',
+            message: response.data.message,
+            style: 'toast-error',
+        };
+        const successMessage = {
+            show: true,
+            type: 'success',
+            message: 'Thao tác thành công.',
+            style: 'toast-success',
+        };
+
+        if (response.data.error === 1) {
+            setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
+            setToastMessage(errorMessage);
+            return;
+        }
+        getAll();
+        setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [], isUpdateStatus: false });
+        setToastMessage(successMessage);
+        setCheckedItems([]);
+        clearCheckbox();
+    };
+
+    const handleSelectAllChange = (isChecked) => {
+        if (isChecked) {
+            const allItemIds = currentRecords.map((item) => item.Id);
+            console.log(allItemIds);
+            setCheckedItems(allItemIds);
+            getEleCheckbox.forEach((ele) => {
+                ele.checked = true;
+            });
+        } else {
+            setCheckedItems([]);
+            clearCheckbox();
+        }
     };
 
     const indexOfLastRecord = currentPage * recordsPerPage;
@@ -397,10 +484,15 @@ function Employee() {
                             style={{
                                 visibility: checkedItems.length > 1 ? 'visible' : 'hidden',
                                 marginBottom: '0',
+                                display: 'flex',
+                                columnGap: '12px',
                             }}
                         >
                             <Button btn__warning onClick={showDeleteMany}>
                                 Xóa nhân viên
+                            </Button>
+                            <Button btn__warning onClick={showUpdateStatusMany}>
+                                Nghỉ việc
                             </Button>
                         </div>
 
@@ -411,7 +503,14 @@ function Employee() {
                             <table className={cx('table', 'table__data')} id="data-table">
                                 <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
-                                        <th style={{ minWidth: '50px' }}></th>
+                                        <th style={{ minWidth: '50px' }}>
+                                            <input
+                                                type="checkbox"
+                                                style={{ width: '24px', height: '24px' }}
+                                                checked={checkedItems.length === currentRecords.length}
+                                                onChange={(e) => handleSelectAllChange(e.target.checked)}
+                                            />
+                                        </th>
                                         <th className={cx('table__data-th')}>Mã nhân viên</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
                                             Tên nhân viên
@@ -426,6 +525,9 @@ function Employee() {
                                         <th className={cx('table__data-th')}>Địa chỉ</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '150px' }}>
                                             Trạng thái
+                                        </th>
+                                        <th style={{ minWidth: '100px' }}>
+                                            Cập nhập <br></br> trạng thái
                                         </th>
                                         <th>Sửa</th>
                                         <th>Xóa</th>
@@ -465,7 +567,12 @@ function Employee() {
                                                 <td>{item.Email}</td>
                                                 <td>{item.PhoneNumber}</td>
                                                 <td>{item.Address}</td>
-                                                <td>{formartStatus(item.Delete_Flag)}</td>
+                                                <td>{formartStatus(item.Status)}</td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    <FaUserAltSlash
+                                                        onClick={handleUpdateStatus.bind(this, item.Id)}
+                                                    ></FaUserAltSlash>
+                                                </td>
                                                 <td>
                                                     <FaPen
                                                         style={{
@@ -511,8 +618,11 @@ function Employee() {
                     message={modalMessage.message}
                     onClose={handleCloseMess}
                     onSuccess={() => {
-                        if (modalMessage.Ids.length > 0) {
+                        if (modalMessage.Ids.length > 0 && modalMessage.isUpdateStatus === false) {
                             handleDeleteMany(modalMessage.Ids);
+                        }
+                        if (modalMessage.Ids.length > 0 && modalMessage.isUpdateStatus) {
+                            handleUpdateStatusMany(modalMessage.Ids);
                         } else {
                             handleDelete(modalMessage.Id);
                         }

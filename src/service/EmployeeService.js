@@ -154,6 +154,35 @@ class EmployeeService {
             });
         return response;
     }
+
+    async updateStatus(status) {
+        let id = status;
+        var response = await axios
+            .put(`${url}/updateStatus/${id}`)
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((error) => {
+                return error.response;
+            });
+        return response;
+    }
+
+    async updateStatusMany(ids) {
+        var response = await axios
+            .post(`${url}/updateStatusMany`, ids)
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((err) => {
+                return err.response;
+            });
+        return response;
+    }
 }
 
 export default new EmployeeService();

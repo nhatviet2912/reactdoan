@@ -123,6 +123,12 @@ li {
     justify-content: flex-start;
 }
 
+.d-flex-end {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
 .btn_hover:hover {
     background-color: #c7c8cc;
 }

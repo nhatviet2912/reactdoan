@@ -6,6 +6,7 @@ import Work from '~/pages/Work';
 import DetailMonth from '~/pages/Attendance/month';
 import Contract from '~/pages/Contract';
 import Salary from '~/pages/Salary';
+import Benefits from '~/pages/Benefits';
 
 const publicRoutes = [
     { path: '/', components: Home },
@@ -16,6 +17,7 @@ const publicRoutes = [
     { path: '/Attendance/DetailMonth', components: DetailMonth },
     { path: '/Contract', components: Contract },
     { path: '/Salary', components: Salary },
+    { path: '/Benefits', components: Benefits },
 ];
 
 const privateRoutes = [];

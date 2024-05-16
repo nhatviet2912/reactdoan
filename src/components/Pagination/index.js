@@ -13,11 +13,11 @@ function Pagination({ nPages, currentPage, setCurrentPage }) {
         if (currentPage !== 1) setCurrentPage(currentPage - 1);
     };
     return (
-        <nav className={cx('d-flex-center')}>
+        <nav className={cx('d-flex-end')}>
             <ul className={cx('d-flex-center', 'page')}>
                 <li className={cx('page-item')}>
                     <a className={cx('page-link')} onClick={goToPrevPage} href="#">
-                        Previous
+                        &lt;&lt;
                     </a>
                 </li>
                 {pageNumbers.map((pgNumber) => (
@@ -29,7 +29,7 @@ function Pagination({ nPages, currentPage, setCurrentPage }) {
                 ))}
                 <li className={cx('page-item')}>
                     <a className={cx('page-link')} onClick={goToNextPage} href="#">
-                        Next
+                        &gt;&gt;
                     </a>
                 </li>
             </ul>
