@@ -1,258 +1,242 @@
 import classNames from 'classnames/bind';
 import styles from '../../assets/css/main.module.scss';
-import { useState, useEffect } from 'react';
-import debounce from 'lodash.debounce';
-
-import { FaPlus } from 'react-icons/fa6';
-import { FaCheckCircle, FaExclamationCircle, FaPen } from 'react-icons/fa';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-
-import Button from '~/components/Button';
-import Input from '~/components/Input';
-import FormModal from '~/components/Form';
-import Message from '~/components/Message';
-import Pagination from '~/components/Pagination';
-import ToastMessage from '~/components/toast-Message';
-import DepartmentService from '~/service/DepartmentService';
 
 const cx = classNames.bind(styles);
-let titleModal = 'Nhập thông tin phòng ban';
-const labelArray = [
-    {
-        title: 'Mã phòng ban',
-        name: 'DepartmentCode',
-        isSelect: false,
-    },
-    {
-        title: 'Tên phòng ban:',
-        name: 'DepartmentName',
-        isSelect: false,
-    },
-    {
-        title: 'Mô tả:',
-        name: 'Descriptions',
-        isSelect: false,
-    },
-];
-
 function Home() {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState({ show: false, title: '', message: '', Id: '' });
-    const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
-    const [dataReponse, setData] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
-    const [dataById, setDataById] = useState(null);
-
-    useEffect(() => {
-        if (toastMessage.show) {
-            const timer = setTimeout(() => {
-                setToastMessage({ ...toastMessage, show: false });
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [toastMessage]);
-
-    useEffect(() => {
-        getAllDepartments();
-    }, []);
-
-    const handleSubmit = async (data, isEdit) => {
-        // console.log(isCreated);
-        const res = isEdit ? await DepartmentService.put(data.Id, data) : await DepartmentService.post(data);
-
-        if (res.error === 0) {
-            setModalOpen(false);
-            setDataById(null);
-            setToastMessage({
-                show: true,
-                type: 'success',
-                message: 'Thao tác thành công.',
-                style: 'toast-success',
-            });
-            getAllDepartments();
-        } else {
-            setToastMessage({
-                show: true,
-                type: 'error',
-                message: res.data.message,
-                style: 'toast-error',
-            });
-        }
-    };
-
-    async function getAllDepartments() {
-        const getAllData = await DepartmentService.getAllDepartments();
-        setData(getAllData.data);
-    }
-
-    const handleCloseModal = () => {
-        setDataById(null);
-        setModalOpen(false);
-    };
-
-    const handleCloseMess = () => {
-        setModalMessage({ show: false, title: '', message: '', Id: '' });
-    };
-
-    const showConfirm = (Id, Code) => {
-        var textMess = `Bạn có muốn xóa thông tin phòng ban có mã ${Code} khỏi hệ thống?`;
-        setModalMessage({
-            show: true,
-            title: 'Xóa thông tin phòng ban',
-            message: textMess,
-            Id: Id,
-        });
-    };
-
-    const showFormEdit = async (Id) => {
-        const res = await DepartmentService.getById(Id);
-        if (res.error === 0) {
-            setModalOpen(true);
-            setDataById(res.data);
-        } else {
-            setToastMessage({
-                show: true,
-                type: 'error',
-                message: res.message,
-                style: 'toast-error',
-            });
-        }
-    };
-
-    const handleDelete = async (Id) => {
-        var res = await DepartmentService.delete(Id);
-        if (res.error === 0) {
-            getAllDepartments();
-            setModalMessage({ show: false, title: '', message: '', Id: '' });
-            setToastMessage({
-                show: true,
-                type: 'success',
-                message: 'Thao tác thành công.',
-                style: 'toast-success',
-            });
-        }
-    };
-
-    const handleSearch = async (value) => {
-        debouncedSearch(value);
-    };
-
-    const debouncedSearch = debounce(async (value) => {
-        if (value !== '') {
-            const res = await DepartmentService.search(value);
-            setData(res.data);
-        } else {
-            getAllDepartments();
-        }
-    }, 1000);
-
-    const indexOfLastRecord = currentPage * recordsPerPage;
-    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-    const currentRecords = dataReponse.slice(indexOfFirstRecord, indexOfLastRecord);
-    const nPages = Math.ceil(dataReponse.length / recordsPerPage);
-
     return (
         <div className={cx('main-content')}>
             <div className={cx('page__title')}>
-                <h4>Quản lý phòng ban</h4>
+                <h4>Dashboard</h4>
             </div>
+
             <section className={cx('firts-section')}>
-                <div className={cx('training')}>
-                    <div className={cx('table__card')}>
-                        <div className={cx('manager__container')}>
-                            <Button btn__success effect onClick={() => setModalOpen(true)}>
-                                <div className={cx('d-flex-center', 'px-4')}>
-                                    <FaPlus />
-                                    Thêm phòng ban
+                <div className={cx('report')}>
+                    <div className="report__card report__box">
+                        <div className="report__box-header">
+                            <div className="report__container">
+                                <p className="report__title--normal">Số lớp học</p>
+                                <h5 id="numberclassName" className="report__data">
+                                    28
+                                </h5>
+                            </div>
+
+                            <div className="report__icon">
+                                <i className="far fa-users-className"></i>
+                            </div>
+                        </div>
+
+                        <div className="report__box-bottom">
+                            <div className="report__box-index">
+                                <i className="fas fa-caret-up">5%</i>
+                            </div>
+                            <div className="report__box-time">
+                                <p>kể từ lần cuối cập nhật</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report__card report__box">
+                        <div className="report__box-header">
+                            <div className="report__container">
+                                <p className="report__title--normal">Số sinh viên</p>
+                                <h5 id="numberStudent" className="report__data">
+                                    23
+                                </h5>
+                            </div>
+
+                            <div className="report__icon">
+                                <i className="fas fa-user-graduate"></i>
+                            </div>
+                        </div>
+
+                        <div className="report__box-bottom">
+                            <div className="report__box-index">
+                                <i className="fas fa-caret-up">5%</i>
+                            </div>
+                            <div className="report__box-time">
+                                <p>kể từ lần cuối cập nhật</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report__card report__box">
+                        <div className="report__box-header">
+                            <div className="report__container">
+                                <p className="report__title--normal">Số giảng viên</p>
+                                <h5 id="numberTeacher" className="report__data">
+                                    12
+                                </h5>
+                            </div>
+
+                            <div className="report__icon">
+                                <i className="fad fa-chalkboard-teacher"></i>
+                            </div>
+                        </div>
+
+                        <div className="report__box-bottom">
+                            <div className="report__box-index">
+                                <i className="fas fa-caret-up">5%</i>
+                            </div>
+                            <div className="report__box-time">
+                                <p>kể từ lần cuối cập nhật</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report__card report__chart--pie report__specialized">
+                        <div className="report__chart--pie-header">
+                            <div className="report__container">
+                                <p className="report__title--bold">Thống kê chuyên ngành</p>
+                            </div>
+
+                            <div className="report__icon">
+                                <i className="far fa-city"></i>
+                            </div>
+                        </div>
+
+                        <div className="report__chart--pie-body">
+                            <div className="report__chart--pie-show"></div>
+                        </div>
+
+                        <div className="report__chart--pie-bottom">
+                            <div className="report__chart--pie-item">
+                                <div className="report__chart--pie-title">
+                                    <div className="report__chart--pie-dots"></div>
+                                    <p>CNW</p>
                                 </div>
-                            </Button>
+
+                                <div className="report__chart--pie-parameter">
+                                    <h5>33%</h5>
+                                </div>
+                            </div>
+
+                            <div className="report__chart--pie-item">
+                                <div className="report__chart--pie-title">
+                                    <div className="report__chart--pie-dots"></div>
+                                    <p>CNDD</p>
+                                </div>
+
+                                <div className="report__chart--pie-parameter">
+                                    <h5>33%</h5>
+                                </div>
+                            </div>
+
+                            <div className="report__chart--pie-item">
+                                <div className="report__chart--pie-title">
+                                    <div className="report__chart--pie-dots"></div>
+                                    <p>KTPM</p>
+                                </div>
+                                <div className="report__chart--pie-parameter">
+                                    <h5>34%</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report__card report__chart--pie report__system">
+                        <div className="report__chart--pie-header">
+                            <div className="report__container">
+                                <p className="report__title--bold">Tình trạng hệ thống</p>
+                            </div>
+
+                            <div className="report__icon">
+                                <i className="far fa-server"></i>
+                            </div>
                         </div>
 
-                        <div className={cx('control-data')} style={{ width: '25%' }}>
-                            <Input
-                                classNames="filter__data"
-                                textLabel="Tìm kiếm:"
-                                onChange={(value) => handleSearch(value)}
-                            ></Input>
+                        <div className="report__chart--pie-body">
+                            <div className=".report__chart--pie-item">
+                                <div className="report__chart--pie-show">
+                                    {/* <svg id="SvgjsSvg1130" width="165" height="61" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" className="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)"
+                                        style="background: transparent;"><g id="SvgjsG1132" className="apexcharts-inner apexcharts-graphical" transform="translate(52.5, 0)"><defs id="SvgjsDefs1131"><clipPath id="gridRectMask0runaavn"><rect id="SvgjsRect1134" width="66" height="62" x="-3" y="-1" rx="0" ry="0" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0" fill="#fff"></rect></clipPath><clipPath id="gridRectMarkerMask0runaavn"><rect id="SvgjsRect1135" width="64" height="64" x="-2" y="-2" rx="0" ry="0" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0" fill="#fff"></rect></clipPath></defs><g id="SvgjsG1136" className="apexcharts-radialbar"><g id="SvgjsG1137"><g id="SvgjsG1138" className="apexcharts-tracks"><g id="SvgjsG1139" className="apexcharts-radialbar-track apexcharts-track" rel="1"><path id="apexcharts-radialbarTrack-0" d="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 29.9960410824485 7.317073516212435" fill="none" fill-opacity="1" stroke="rgba(242,242,242,0.85)" stroke-opacity="1" stroke-linecap="round" stroke-width="4.258536585365854" stroke-dasharray="0" className="apexcharts-radialbar-area" data:pathOrig="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 29.9960410824485 7.317073516212435"></path></g></g><g id="SvgjsG1141"><g id="SvgjsG1143" className="apexcharts-series apexcharts-radial-series" seriesName="seriesx1" rel="1" data:realIndex="0"><path id="SvgjsPath1144" d="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 7.733822424235914 34.32810648049236" fill="none" fill-opacity="0.85" stroke="rgba(86,100,210,0.85)" stroke-opacity="1" stroke-linecap="round" stroke-width="4.390243902439025" stroke-dasharray="0" className="apexcharts-radialbar-area apexcharts-radialbar-slice-0" data:angle="259" data:value="72" index="0" j="0" data:pathOrig="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 7.733822424235914 34.32810648049236"></path></g><circle id="SvgjsCircle1142" r="20.553658536585367" cx="30" cy="30" className="apexcharts-radialbar-hollow" fill="transparent"></circle></g></g></g></g><g id="SvgjsG1133" className="apexcharts-annotations"></g></svg> */}
+                                </div>
+
+                                <div className="report__title--bold text-center">
+                                    <h4>CPU</h4>
+                                </div>
+                            </div>
+
+                            <div className=".report__chart--pie-item">
+                                <div className="report__chart--pie-show">
+                                    {/* <svg id="SvgjsSvg1147" width="165" height="61" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" className="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)"
+                                        style="background: transparent;"><g id="SvgjsG1149" className="apexcharts-inner apexcharts-graphical" transform="translate(52.5, 0)"><defs id="SvgjsDefs1148"><clipPath id="gridRectMask8jx6q02i"><rect id="SvgjsRect1151" width="66" height="62" x="-3" y="-1" rx="0" ry="0" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0" fill="#fff"></rect></clipPath><clipPath id="gridRectMarkerMask8jx6q02i"><rect id="SvgjsRect1152" width="64" height="64" x="-2" y="-2" rx="0" ry="0" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0" fill="#fff"></rect></clipPath></defs><g id="SvgjsG1153" className="apexcharts-radialbar"><g id="SvgjsG1154"><g id="SvgjsG1155" className="apexcharts-tracks"><g id="SvgjsG1156" className="apexcharts-radialbar-track apexcharts-track" rel="1"><path id="apexcharts-radialbarTrack-0" d="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 29.9960410824485 7.317073516212435" fill="none" fill-opacity="1" stroke="rgba(242,242,242,0.85)" stroke-opacity="1" stroke-linecap="round" stroke-width="4.258536585365854" stroke-dasharray="0" className="apexcharts-radialbar-area" data:pathOrig="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 29.9960410824485 7.317073516212435"></path></g></g><g id="SvgjsG1158"><g id="SvgjsG1160" className="apexcharts-series apexcharts-radial-series" seriesName="seriesx1" rel="1" data:realIndex="0"><path id="SvgjsPath1161" d="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 11.649126712958513 43.33268986907318" fill="none" fill-opacity="0.85" stroke="rgba(28,187,140,0.85)" stroke-opacity="1" stroke-linecap="round" stroke-width="4.390243902439025" stroke-dasharray="0" className="apexcharts-radialbar-area apexcharts-radialbar-slice-0" data:angle="234" data:value="65" index="0" j="0" data:pathOrig="M 30 7.317073170731707 A 22.682926829268293 22.682926829268293 0 1 1 11.649126712958513 43.33268986907318"></path></g><circle id="SvgjsCircle1159" r="20.553658536585367" cx="30" cy="30" className="apexcharts-radialbar-hollow" fill="transparent"></circle></g></g></g></g><g id="SvgjsG1150" className="apexcharts-annotations"></g></svg> */}
+                                </div>
+
+                                <div className="report__title--bold text-center">
+                                    <h4>RAM</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="report__card report__chart--column">
+                        <div className="report__chart--column-header">
+                            <div className="report__chart--column-content">
+                                <p className="report__title--bold">Tình trạng sinh viên</p>
+                            </div>
+
+                            <div className="report__icon">
+                                <i className="fas fa-school"></i>
+                            </div>
                         </div>
 
-                        <div className={cx('manager__container table-data')}>
-                            <table className={cx('table', 'table__data')}>
-                                <thead>
-                                    <tr className={cx('table__data-tr')}>
-                                        <th className={cx('table__data-th')}>Mã phòng ban</th>
-                                        <th className={cx('table__data-th')}>Tên phòng ban</th>
-                                        <th className={cx('table__data-th')}>Mô tả</th>
-                                        <th className={cx('table__data-th')}>Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {dataReponse.length > 0 &&
-                                        currentRecords.map((item) => (
-                                            <tr key={item.Id} onDoubleClickCapture={showFormEdit.bind(this, item.Id)}>
-                                                <td>{item.DepartmentCode}</td>
-                                                <td>{item.DepartmentName}</td>
-                                                <td>{item.Descriptions}</td>
-                                                <td className={cx('table__data-td')}>
-                                                    <FaPen
-                                                        style={{
-                                                            marginRight: '12px',
-                                                            color: '#5664d2',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                        onClick={showFormEdit.bind(this, item.Id)}
-                                                    />
-                                                    <RiDeleteBin6Line
-                                                        style={{ color: '#ff3d60', cursor: 'pointer' }}
-                                                        onClick={showConfirm.bind(this, item.Id, item.DepartmentCode)}
-                                                    />
-                                                </td>
-                                            </tr>
-                                        ))}
-                                </tbody>
-                            </table>
+                        <div className="report__chart--column-body">
+                            <div className="chart__list-column">
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2010</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2011</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2012</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2013</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2014</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2015</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2016</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2017</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2018</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2019</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2020</div>
+                                </div>
+                                <div className="chart__column">
+                                    <div className="chart__column-index-bottom">2021</div>
+                                </div>
+                            </div>
                         </div>
-                        <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+
+                        <div className="chart__list-index-left">
+                            <div className="chart__column-index-left">2000</div>
+                            <div className="chart__column-index-left">1800</div>
+                            <div className="chart__column-index-left">1600</div>
+                            <div className="chart__column-index-left">1400</div>
+                            <div className="chart__column-index-left">1200</div>
+                            <div className="chart__column-index-left">1000</div>
+                            <div className="chart__column-index-left">800</div>
+                            <div className="chart__column-index-left">600</div>
+                            <div className="chart__column-index-left">400</div>
+                            <div className="chart__column-index-left">200</div>
+                            <div className="chart__column-index-left">0</div>
+                        </div>
                     </div>
                 </div>
             </section>
-
-            {modalOpen && (
-                <FormModal
-                    title={titleModal}
-                    onSubmit={handleSubmit}
-                    onClose={handleCloseModal}
-                    labelsInput={labelArray}
-                    dataById={dataById}
-                ></FormModal>
-            )}
-
-            {modalMessage.show && (
-                <Message
-                    title={modalMessage.title}
-                    message={modalMessage.message}
-                    onClose={handleCloseMess}
-                    onSuccess={() => handleDelete(modalMessage.Id)}
-                ></Message>
-            )}
-
-            {toastMessage.show && (
-                <ToastMessage
-                    type={toastMessage.type === 'success' ? 'Thành công' : 'Có lỗi'}
-                    message={toastMessage.message}
-                    onclose={() => setToastMessage({ ...toastMessage, show: false })}
-                    icon={
-                        toastMessage.type === 'success' ? (
-                            <FaCheckCircle style={{ color: 'white', backgroundColor: 'green', fontSize: '16px' }} />
-                        ) : (
-                            <FaExclamationCircle style={{ color: 'white', backgroundColor: 'red', fontSize: '16px' }} />
-                        )
-                    }
-                    style={toastMessage.style}
-                ></ToastMessage>
-            )}
         </div>
     );
 }

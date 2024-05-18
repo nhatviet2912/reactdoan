@@ -9,9 +9,14 @@ const cx = classNames.bind(styles);
 
 const data = [
     {
-        name: 'Phòng ban',
+        name: 'Trang chủ',
         icon: <CiHome />,
         path: '/',
+    },
+    {
+        name: 'Phòng ban',
+        icon: <CiHome />,
+        path: '/Department',
     },
     {
         name: 'Chức vụ',

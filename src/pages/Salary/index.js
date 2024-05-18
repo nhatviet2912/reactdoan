@@ -207,7 +207,9 @@ function Salary() {
                                         <th className={cx('table__data-th')}>Lương Net</th>
                                         <th className={cx('table__data-th')}>Lương cơ bản</th>
                                         <th className={cx('table__data-th')}>Trạng thái</th>
-                                        <th className={cx('table__data-th')}>Thanh toán</th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '100px' }}>
+                                            Thanh toán
+                                        </th>
                                         <th>Xem</th>
                                     </tr>
                                 </thead>
@@ -224,14 +226,16 @@ function Salary() {
                                                 <td>{formatVND(item.NetSalary)}</td>
                                                 <td>{formatVND(item.SalaryBasic)}</td>
                                                 <td>{formartStatus(item.Status)}</td>
-                                                <td>
-                                                    {item.Status === 0 && (
+                                                <td style={{ textAlign: 'center' }}>
+                                                    {item.Status === 0 ? (
                                                         <Button
                                                             btn__success
                                                             onClick={() => showConfirm(item.Id, item.EmployeeCode)}
                                                         >
                                                             <FaCheckCircle />
                                                         </Button>
+                                                    ) : (
+                                                        <FaCheckCircle style={{ cursor: 'no-drop' }} />
                                                     )}
                                                 </td>
                                                 <td>

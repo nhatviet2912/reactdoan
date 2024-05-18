@@ -79,7 +79,7 @@ function FormModal({ title, onSubmit, onClose, labelsInput, dataById, dataSelect
                         <div className={cx('d-flex-between')}>
                             <Button btn__primary>{titleButton}</Button>
                             <Button btn__muted onClick={() => onClose()}>
-                                Bỏ qua
+                                Hủy
                             </Button>
                         </div>
                     </form>

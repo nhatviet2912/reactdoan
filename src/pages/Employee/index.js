@@ -79,7 +79,7 @@ function Employee() {
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
+    const [recordsPerPage] = useState(20);
     const [dataById, setDataById] = useState(null);
     const [dataSelectOption, setdataSelectOption] = useState({});
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
@@ -460,6 +460,7 @@ function Employee() {
                                     textLabel="Tìm kiếm:"
                                     onChange={(value) => handleSearch(value)}
                                     style={{ marginBottom: '0px' }}
+                                    placeholder={'Nhập thông tin tìm kiếm'}
                                 ></Input>
                             </div>
                             <div style={{ marginBottom: '0' }}>
@@ -550,14 +551,16 @@ function Employee() {
                                                 }}
                                             >
                                                 <td className={cx('d-flex-center')}>
-                                                    <input
-                                                        type="checkbox"
-                                                        value={item.Id}
-                                                        style={{ width: '24px', height: '24px' }}
-                                                        onChange={(e) =>
-                                                            handleCheckboxChange(item.Id, e.target.checked)
-                                                        }
-                                                    />
+                                                    {item.Status !== 1 ? (
+                                                        <input
+                                                            type="checkbox"
+                                                            value={item.Id}
+                                                            style={{ width: '24px', height: '24px' }}
+                                                            onChange={(e) =>
+                                                                handleCheckboxChange(item.Id, e.target.checked)
+                                                            }
+                                                        />
+                                                    ) : null}
                                                 </td>
                                                 <td>{item.EmployeeCode}</td>
                                                 <td>{item.EmployeeName}</td>
@@ -570,7 +573,12 @@ function Employee() {
                                                 <td>{formartStatus(item.Status)}</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <FaUserAltSlash
-                                                        onClick={handleUpdateStatus.bind(this, item.Id)}
+                                                        onClick={
+                                                            item.Status !== 1
+                                                                ? handleUpdateStatus.bind(this, item.Id)
+                                                                : null
+                                                        }
+                                                        style={{ cursor: item.Status === 1 ? 'no-drop' : 'pointer' }}
                                                     ></FaUserAltSlash>
                                                 </td>
                                                 <td>
@@ -578,15 +586,24 @@ function Employee() {
                                                         style={{
                                                             marginRight: '12px',
                                                             color: '#5664d2',
-                                                            cursor: 'pointer',
+                                                            cursor: item.Status === 1 ? 'no-drop' : 'pointer',
                                                         }}
-                                                        onClick={showFormEdit.bind(this, item.Id)}
+                                                        onClick={
+                                                            item.Status !== 1 ? showFormEdit.bind(this, item.Id) : null
+                                                        }
                                                     />
                                                 </td>
                                                 <td>
                                                     <RiDeleteBin6Line
-                                                        style={{ color: '#ff3d60', cursor: 'pointer' }}
-                                                        onClick={showConfirm.bind(this, item.Id, item.EmployeeCode)}
+                                                        style={{
+                                                            color: '#ff3d60',
+                                                            cursor: item.Status === 1 ? 'no-drop' : 'pointer',
+                                                        }}
+                                                        onClick={
+                                                            item.Status !== 1
+                                                                ? showConfirm.bind(this, item.Id, item.EmployeeCode)
+                                                                : null
+                                                        }
                                                     />
                                                 </td>
                                             </tr>

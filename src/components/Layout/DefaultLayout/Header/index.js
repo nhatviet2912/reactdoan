@@ -54,16 +54,6 @@ function Header() {
                             <FontAwesomeIcon icon={faBookmark} />
                         </Button>
                     </div>
-
-                    <div className={cx('navbar__dropdown')}>
-                        <Button size effect dropdown__btn>
-                            <Image
-                                className={cx('img-cover-center')}
-                                src="https://aiacademy.edu.vn/assets/images/flags/americanflag.jpg"
-                                alt="Header Language"
-                            />
-                        </Button>
-                    </div>
                 </div>
             </div>
         </header>
