@@ -12,7 +12,7 @@ import Message from '~/components/Message';
 import Pagination from '~/components/Pagination';
 import ToastMessage from '~/components/toast-Message';
 
-import { formatDate } from '~/utils/helpers';
+import { formatDate, formatVND } from '~/utils/helpers';
 
 import EmployeeService from '~/service/EmployeeService';
 import BenefitService from '~/service/BenefitService';
@@ -204,6 +204,15 @@ function Benefits() {
                                         <th className={cx('table__data-th')}>Ngày bắt đầu</th>
                                         <th className={cx('table__data-th')}>Ngày kết thúc</th>
                                         <th className={cx('table__data-th')}>Loại bảo hiểm</th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
+                                            Mức đóng bảo hiểm
+                                        </th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
+                                            Lương cơ bản
+                                        </th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
+                                            Số tiền phải đóng
+                                        </th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
                                             Mô tả
                                         </th>
@@ -222,6 +231,9 @@ function Benefits() {
                                                 <td>{formatDate(item.StartDate)}</td>
                                                 <td>{formatDate(item.EndDate)}</td>
                                                 <td>{item.BenefitType}</td>
+                                                <td>{item.Percent}</td>
+                                                <td>{formatVND(item.SalaryBasic)}</td>
+                                                <td>{formatVND(item.SoTienPhaiDong)}</td>
                                                 <td>{item.Description}</td>
                                                 <td className={cx('table__data-td')}>
                                                     <FaPen

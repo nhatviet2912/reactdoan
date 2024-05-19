@@ -517,6 +517,9 @@ function Employee() {
                                             Tên nhân viên
                                         </th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
+                                            Tên phòng ban
+                                        </th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
                                             Tên chức vụ
                                         </th>
                                         <th className={cx('table__data-th')}>Ngày sinh</th>
@@ -540,7 +543,7 @@ function Employee() {
                                             <tr
                                                 key={item.Id}
                                                 onDoubleClickCapture={(event) => {
-                                                    if (event.target.tagName !== 'INPUT') {
+                                                    if (event.target.tagName !== 'INPUT' && item.Status !== 1 ) {
                                                         showFormEdit(item.Id);
                                                     }
                                                 }}
@@ -550,7 +553,7 @@ function Employee() {
                                                         : 'transparent',
                                                 }}
                                             >
-                                                <td className={cx('d-flex-center')}>
+                                                <td className={cx(item.Status === 0 ? 'd-flex-center' : '')}>
                                                     {item.Status !== 1 ? (
                                                         <input
                                                             type="checkbox"
@@ -564,6 +567,7 @@ function Employee() {
                                                 </td>
                                                 <td>{item.EmployeeCode}</td>
                                                 <td>{item.EmployeeName}</td>
+                                                <td>{item.DepartmentName}</td>
                                                 <td>{item.PositionName}</td>
                                                 <td>{formatDate(item.DateOfBirth)}</td>
                                                 <td>{formatGender(item.Gender)}</td>
