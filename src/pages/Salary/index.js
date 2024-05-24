@@ -204,8 +204,11 @@ function Salary() {
                                         </th>
                                         <th className={cx('table__data-th')}>Số ngày làm việc</th>
                                         <th className={cx('table__data-th')}>Lương theo ngày</th>
-                                        <th className={cx('table__data-th')}>Lương Net</th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
+                                            Số tiền đóng bảo hiểm
+                                        </th>
                                         <th className={cx('table__data-th')}>Lương cơ bản</th>
+                                        <th className={cx('table__data-th')}>Lương thực lãnh</th>
                                         <th className={cx('table__data-th')}>Trạng thái</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '100px' }}>
                                             Thanh toán
@@ -223,8 +226,9 @@ function Salary() {
                                                 <td>{item.DepartmentName}</td>
                                                 <td>{item.DayWork}</td>
                                                 <td>{formatVND(item.SalaryDay)}</td>
-                                                <td>{formatVND(item.NetSalary)}</td>
+                                                <td>{formatVND(item.Amount)}</td>
                                                 <td>{formatVND(item.SalaryBasic)}</td>
+                                                <td>{formatVND(item.NetSalary)}</td>
                                                 <td>{formartStatus(item.Status)}</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     {item.Status === 0 ? (

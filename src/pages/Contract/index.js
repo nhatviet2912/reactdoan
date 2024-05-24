@@ -92,7 +92,7 @@ function Contract() {
         if (Object.keys(error).length === 0) {
             try {
                 console.log(data);
-                const res = isEdit ? await EmployeeService.put(data.Id, data) : await EmployeeService.post(data);
+                const res = isEdit ? await ContractService.put(data.Id, data) : await ContractService.post(data);
 
                 if (res.error === 0) {
                     handleCloseModal();
