@@ -162,12 +162,12 @@ function Home() {
                 <div className={cx('training')}>
                     <div className={cx('table__card')}>
                         <div className={cx('manager__container')}>
-                            <Button btn__success effect onClick={() => setModalOpen(true)}>
+                            {/* <Button btn__success effect onClick={() => setModalOpen(true)}>
                                 <div className={cx('d-flex-center', 'px-4')}>
                                     <FaPlus />
                                     Thêm phòng ban
                                 </div>
-                            </Button>
+                            </Button> */}
                         </div>
 
                         <div className={cx('control-data')} style={{ width: '25%' }}>
