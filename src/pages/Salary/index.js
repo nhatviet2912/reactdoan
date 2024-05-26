@@ -11,6 +11,7 @@ import ToastMessage from '~/components/toast-Message';
 
 import { formatVND } from '~/utils/helpers';
 import SalaryService from '~/service/SalaryService';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 var currentDate = new Date();
@@ -36,6 +37,10 @@ function Salary() {
     useEffect(() => {
         getAll(currentDate.getMonth() + 1, currentDate.getFullYear());
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     async function getAll(Month, Year) {
         let data = {

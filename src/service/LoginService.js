@@ -1,40 +1,11 @@
 import axios from 'axios';
 
-var url = `http://localhost:4000/work`;
+var url = `http://localhost:4000/login`;
 
-class WorkService {
-    async getAll() {
-        var response = await axios
-            .get(`${url}`)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        return response;
-    }
-
-    async getDetail(Id) {
-        console.log(Id);
-        var response = await axios
-            .get(`${url}/getDetail/${Id}`)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        return response;
-    }
-
+class LoginService {
     async post(data) {
         var response = await axios
-            .post(`${url}/create`, data)
+            .post(`${url}/login`, data)
             .then((res) => {
                 if (res.data) {
                     return res.data;
@@ -104,20 +75,6 @@ class WorkService {
             });
         return response;
     }
-
-    async confirmCheck(Id, Status) {
-        var response = await axios
-            .put(`${url}/check/${Id}/${Status}`)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                return error.response;
-            });
-        return response;
-    }
 }
 
-export default new WorkService();
+export default new LoginService();

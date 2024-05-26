@@ -3,6 +3,7 @@ import styles from '../../assets/css/main.module.scss';
 import { useEffect, useState } from 'react';
 
 import ReportService from '~/service/ReportService';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 function Home() {
@@ -15,6 +16,10 @@ function Home() {
         getTotalDepartment();
         getTotalEmployeeOut();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     async function getTotalEmployee() {
         let response = await ReportService.getTotalEmployee();

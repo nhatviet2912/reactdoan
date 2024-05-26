@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 import { FaCheckCircle, FaExclamationCircle, FaPen } from 'react-icons/fa';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { TiDeleteOutline } from 'react-icons/ti';
 
 import Button from '~/components/Button';
 import FormModal from '~/components/Form';
@@ -14,6 +15,7 @@ import ToastMessage from '~/components/toast-Message';
 import WorkService from '~/service/WorkService';
 import EmployeeService from '~/service/EmployeeService';
 import { formatDate } from '~/utils/helpers';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 var namePage = 'lịch công tác';
@@ -63,6 +65,7 @@ function Work() {
     const [recordsPerPage] = useState(10);
     const [dataById, setDataById] = useState(null);
     const [dataSelectOption, setdataSelectOption] = useState({});
+    const [dataJson, setDataJson] = useState({});
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -77,6 +80,12 @@ function Work() {
     useEffect(() => {
         getAll();
         getAllSelect();
+    }, []);
+
+    useEffect(() => {
+        checkAuth();
+        var json = JSON.parse(sessionStorage.getItem('Auth')) || null;
+        setDataJson(json);
     }, []);
 
     const handleSubmit = async (data, isEdit) => {
@@ -103,8 +112,15 @@ function Work() {
     };
 
     async function getAll() {
-        const getAllData = await WorkService.getAll();
-        setData(getAllData.data);
+        let json = JSON.parse(sessionStorage.getItem('Auth')) || null;
+        if (json.Id === 1) {
+            const getAllData = await WorkService.getAll();
+            setData(getAllData.data);
+        } else {
+            console.log(json.EmployeeId);
+            const getDetail = await WorkService.getDetail(json.EmployeeId);
+            setData(getDetail.data);
+        }
     }
 
     async function getAllSelect() {
@@ -160,6 +176,8 @@ function Work() {
         }
     };
 
+    const handleConfirm = async () => {};
+
     const formartStatus = (status) => {
         if (status === 0) {
             return (
@@ -182,13 +200,13 @@ function Work() {
                 <div
                     style={{
                         padding: '0 4px',
-                        background: '#f32424',
+                        background: '#4caf50',
                         color: '#fff',
                         borderRadius: '10px',
                         textAlign: 'center',
                     }}
                 >
-                    Đang công tác
+                    Đồng ý
                 </div>
             );
         }
@@ -203,9 +221,24 @@ function Work() {
                     textAlign: 'center',
                 }}
             >
-                Đã hết hạn
+                Từ chối
             </div>
         );
+    };
+
+    const handleConfirmCheck = async (Id, Code, status) => {
+        let reponse = await WorkService.confirmCheck(Id, Code);
+        console.log(reponse);
+        if (reponse.error === 0) {
+            getAll();
+            setModalMessage({ show: false, title: '', message: '', Id: '' });
+            setToastMessage({
+                show: true,
+                type: 'success',
+                message: 'Thao tác thành công.',
+                style: 'toast-success',
+            });
+        }
     };
 
     const indexOfLastRecord = currentPage * recordsPerPage;
@@ -222,12 +255,14 @@ function Work() {
                 <div className={cx('training')}>
                     <div className={cx('table__card')}>
                         <div className={cx('manager__container')}>
-                            <Button btn__success effect onClick={() => setModalOpen(true)}>
-                                <div className={cx('d-flex-center', 'px-4')}>
-                                    <FaPlus />
-                                    Thêm {namePage}
-                                </div>
-                            </Button>
+                            {dataJson?.Id === 1 && (
+                                <Button btn__success effect onClick={() => setModalOpen(true)}>
+                                    <div className={cx('d-flex-center', 'px-4')}>
+                                        <FaPlus />
+                                        Thêm {namePage}
+                                    </div>
+                                </Button>
+                            )}
                         </div>
 
                         <div
@@ -252,8 +287,12 @@ function Work() {
                                             Mục đích
                                         </th>
                                         <th className={cx('table__data-th')}>Trạng thái</th>
-                                        <th>Sửa</th>
-                                        <th>Xóa</th>
+                                        <th className={cx('table__data-th')} styles={{ textAlign: 'center' }}>
+                                            {dataJson?.Id === 2 ? 'Đồng ý' : 'Sửa'}
+                                        </th>
+                                        <th className={cx('table__data-th')} styles={{ textAlign: 'center' }}>
+                                            {dataJson?.Id === 2 ? 'Từ chối' : 'Xóa'}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -270,20 +309,46 @@ function Work() {
                                                 <td>{item.Reason}</td>
                                                 <td>{formartStatus(item.Status)}</td>
                                                 <td className={cx('table__data-td')}>
-                                                    <FaPen
-                                                        style={{
-                                                            marginRight: '12px',
-                                                            color: '#5664d2',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                        onClick={showFormEdit.bind(this, item.Id)}
-                                                    />
+                                                    {dataJson?.Id === 2 ? (
+                                                        <>
+                                                            <FaCheckCircle
+                                                                style={{ color: '#5664d2' }}
+                                                                onClick={handleConfirmCheck.bind(this, item.Id, 1)}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <FaPen
+                                                                style={{
+                                                                    marginRight: '12px',
+                                                                    color: '#5664d2',
+                                                                    cursor: 'pointer',
+                                                                }}
+                                                                onClick={showFormEdit.bind(this, item.Id)}
+                                                            />
+                                                        </>
+                                                    )}
                                                 </td>
-                                                <td>
-                                                    <RiDeleteBin6Line
-                                                        style={{ color: '#ff3d60', cursor: 'pointer' }}
-                                                        onClick={showConfirm.bind(this, item.Id, item.Id)}
-                                                    />
+                                                <td className={cx('table__data-td')}>
+                                                    {dataJson?.Id === 2 ? (
+                                                        <>
+                                                            <TiDeleteOutline
+                                                                style={{ color: '#ff3d60', textAlign: 'center' }}
+                                                                onClick={handleConfirmCheck.bind(this, item.Id, 2)}
+                                                            />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <RiDeleteBin6Line
+                                                                style={{ color: '#ff3d60', cursor: 'pointer' }}
+                                                                onClick={showConfirm.bind(
+                                                                    this,
+                                                                    item.Id,
+                                                                    item.PositionCode,
+                                                                )}
+                                                            />
+                                                        </>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}

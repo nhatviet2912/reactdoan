@@ -11,6 +11,7 @@ import Button from '~/components/Button';
 import AttendanceService from '~/service/AttendanceService';
 import SalaryService from '~/service/SalaryService';
 import { getWorkingDays } from '~/utils/helpers';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 var currentDate = new Date();
@@ -37,6 +38,10 @@ function DetailMonth() {
         getAll(currentDate.getFullYear(), currentDate.getMonth() + 1);
         getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth() + 1);
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     async function getAll(Year, Month) {
         const result = await AttendanceService.getWithMonth(Year, Month);
@@ -97,7 +102,7 @@ function DetailMonth() {
         <div className={cx('main-content')}>
             <div className={cx('page__title')}>
                 <h4>
-                    Bảng công hàng tháng {selectedValueStatus ==='' ? currentDate.getMonth() + 1 : selectedValueStatus}
+                    Bảng công hàng tháng {selectedValueStatus === '' ? currentDate.getMonth() + 1 : selectedValueStatus}
                 </h4>
             </div>
             <section className={cx('firts-section')}>

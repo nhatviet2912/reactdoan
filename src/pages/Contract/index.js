@@ -16,6 +16,7 @@ import ToastMessage from '~/components/toast-Message';
 import ContractService from '~/service/ContractService';
 import EmployeeService from '~/service/EmployeeService';
 import { formatDate, formatVND } from '~/utils/helpers';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 var namePage = 'hợp đồng';
@@ -86,6 +87,10 @@ function Contract() {
         getAll();
         getAllSelectForm();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     const handleSubmit = async (data, isEdit) => {
         var error = validateData(data);

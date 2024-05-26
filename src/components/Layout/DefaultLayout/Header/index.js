@@ -6,9 +6,16 @@ import styles from './Header.module.scss';
 import Button from '~/components/Button';
 import Image from '~/components/Images';
 
+import { IoIosLogOut } from 'react-icons/io';
+
 const cx = classNames.bind(styles);
 
 function Header() {
+    const handleLogOut = () => {
+        sessionStorage.clear();
+        window.location.href = '/Login';
+    };
+
     return (
         <header className={cx('header')}>
             <div className={cx('navbar__header')}>
@@ -52,6 +59,12 @@ function Header() {
                     <div className={cx('navbar__dropdown')}>
                         <Button size effect dropdown__btn>
                             <FontAwesomeIcon icon={faBookmark} />
+                        </Button>
+                    </div>
+
+                    <div class="navbar__dropdown">
+                        <Button size effect dropdown__btn onClick={handleLogOut}>
+                            <IoIosLogOut></IoIosLogOut>
                         </Button>
                     </div>
                 </div>

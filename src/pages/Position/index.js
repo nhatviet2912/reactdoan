@@ -15,6 +15,7 @@ import Pagination from '~/components/Pagination';
 import ToastMessage from '~/components/toast-Message';
 import PositionService from '~/service/PositionService';
 import DepartmentService from '~/service/DepartmentService';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 var namePage = 'chức vụ';
@@ -67,6 +68,10 @@ function Position() {
         getAll();
         getAllDepartments();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     const handleSubmit = async (data, isEdit) => {
         const res = isEdit ? await PositionService.put(data.Id, data) : await PositionService.post(data);

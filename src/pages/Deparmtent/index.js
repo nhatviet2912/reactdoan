@@ -14,6 +14,7 @@ import Message from '~/components/Message';
 import Pagination from '~/components/Pagination';
 import ToastMessage from '~/components/toast-Message';
 import DepartmentService from '~/service/DepartmentService';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 let titleModal = 'Nhập thông tin phòng ban';
@@ -57,6 +58,10 @@ function Home() {
     useEffect(() => {
         getAllDepartments();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     const handleSubmit = async (data, isEdit) => {
         // console.log(isCreated);

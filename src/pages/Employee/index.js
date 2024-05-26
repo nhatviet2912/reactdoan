@@ -17,6 +17,7 @@ import PositionService from '~/service/PositionService';
 import EmployeeService from '~/service/EmployeeService';
 import { formatDate, formatGender, formartStatus, downloadFile } from '~/utils/helpers';
 import { isValidPhone, isValidEmail } from '~/utils/helpers/regex';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 var namePage = 'nhân viên';
@@ -101,6 +102,10 @@ function Employee() {
         getAll();
         getAllSelectPosition();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     const handleSubmit = async (data, isEdit) => {
         var error = validateData(data);
@@ -543,7 +548,7 @@ function Employee() {
                                             <tr
                                                 key={item.Id}
                                                 onDoubleClickCapture={(event) => {
-                                                    if (event.target.tagName !== 'INPUT' && item.Status !== 1 ) {
+                                                    if (event.target.tagName !== 'INPUT' && item.Status !== 1) {
                                                         showFormEdit(item.Id);
                                                     }
                                                 }}

@@ -8,6 +8,9 @@ import Contract from '~/pages/Contract';
 import Salary from '~/pages/Salary';
 import Benefits from '~/pages/Benefits';
 import Home from '~/pages/Home';
+import Login from '~/pages/Login';
+import DefautLogin from '~/components/Layout/LayoutLogin';
+import SignIn from '~/pages/Login/SingIn';
 
 const publicRoutes = [
     { path: '/', components: Home },
@@ -20,6 +23,8 @@ const publicRoutes = [
     { path: '/Contract', components: Contract },
     { path: '/Salary', components: Salary },
     { path: '/Benefits', components: Benefits },
+    { path: '/Login', components: Login, layout: DefautLogin },
+    { path: '/SignIn', components: SignIn, layout: DefautLogin },
 ];
 
 const privateRoutes = [];

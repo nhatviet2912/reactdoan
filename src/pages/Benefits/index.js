@@ -13,6 +13,7 @@ import Pagination from '~/components/Pagination';
 import ToastMessage from '~/components/toast-Message';
 
 import { formatDate, formatVND } from '~/utils/helpers';
+import { checkAuth } from '~/utils/helpers/login';
 
 import EmployeeService from '~/service/EmployeeService';
 import BenefitService from '~/service/BenefitService';
@@ -80,6 +81,10 @@ function Benefits() {
         getAll();
         getAllSelect();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     const handleSubmit = async (data, isEdit) => {
         const res = isEdit ? await BenefitService.put(data.Id, data) : await BenefitService.post(data);

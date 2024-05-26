@@ -12,6 +12,7 @@ import Pagination from '~/components/Pagination';
 import { downloadFile } from '~/utils/helpers';
 import AttendanceService from '~/service/AttendanceService';
 import DepartmentService from '~/service/DepartmentService';
+import { checkAuth } from '~/utils/helpers/login';
 
 const cx = classNames.bind(styles);
 
@@ -39,6 +40,10 @@ function Attendance() {
         getAll();
         getAllSelectDepartment();
     }, []);
+
+    useEffect(() => {
+        checkAuth();
+    });
 
     const handleButtonClick = () => {
         fileInputRef.current.click();
@@ -120,7 +125,7 @@ function Attendance() {
                 <div className={cx('training')}>
                     <div className={cx('table__card')}>
                         <div className={cx('d-flex-between')}>
-                            <div>
+                            <div className={cx('d-flex-between')} style={{ columnGap: '6px' }}>
                                 <label className={cx('label-dropdown')}>
                                     <span style={{ marginRight: '12px' }}>Phòng ban</span>
                                     <select
@@ -142,9 +147,15 @@ function Attendance() {
                                 <Button btn__success effect onClick={handleExportTemplate}>
                                     <div className={cx('d-flex-center', 'px-4')}>
                                         <CiExport />
-                                        Export Template
+                                        File chấm công tuần
                                     </div>
                                 </Button>
+                                {/* <Button btn__success effect onClick={handleExportTemplate}>
+                                    <div className={cx('d-flex-center', 'px-4')}>
+                                        <CiExport />
+                                        File chấm công tháng
+                                    </div>
+                                </Button> */}
                             </div>
                             <Button btn__success effect onClick={handleButtonClick}>
                                 <div className={cx('d-flex-center', 'px-4')}>
@@ -157,6 +168,7 @@ function Attendance() {
                                 ref={fileInputRef}
                                 style={{ display: 'none' }}
                                 onChange={handleFileChange}
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                             />
                         </div>
 
