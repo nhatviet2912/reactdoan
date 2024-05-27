@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/attendances`;
+var url = `${config.apiUrl}/attendances`;
 var headers = new Headers({
     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

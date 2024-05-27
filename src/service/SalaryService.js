@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/salary`;
+var url = `${config.apiUrl}/salary`;
 
 class SalaryService {
     async getAll() {

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/department`;
+var url = `${config.apiUrl}/department`;
 
 class DepartmentService {
     async getAllDepartments() {

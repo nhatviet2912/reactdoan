@@ -1,6 +1,8 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/report`;
+
+var url = `${config.apiUrl}/report`;
 
 class ReportService {
     async getTotalEmployee() {

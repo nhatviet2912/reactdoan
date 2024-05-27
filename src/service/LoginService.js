@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/login`;
+var url = `${config.apiUrl}/login`;
 
 class LoginService {
     async post(data) {

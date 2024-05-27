@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/work`;
+var url = `${config.apiUrl}/work`;
 
 class WorkService {
     async getAll() {

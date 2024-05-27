@@ -1,6 +1,7 @@
 import axios from 'axios';
+import config from '../config';
 
-var url = `http://localhost:4000/position`;
+var url = `${config.apiUrl}/position`;
 
 class PositionService {
     async getAll() {
