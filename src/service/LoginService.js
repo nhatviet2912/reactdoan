@@ -32,9 +32,9 @@ class LoginService {
         return response;
     }
 
-    async getById(Id) {
+    async getAll() {
         var response = await axios
-            .get(`${url}/getById/${Id}`)
+            .get(`${url}/getAll`)
             .then((res) => {
                 if (res.data) {
                     return res.data;

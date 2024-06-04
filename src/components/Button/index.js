@@ -13,6 +13,7 @@ function Button({
     btn__primary = false,
     btn__warning = false,
     btn__muted = false,
+    btn__disabled = false,
     children,
     onClick,
 }) {
@@ -35,6 +36,7 @@ function Button({
         btn__primary,
         btn__warning,
         btn__muted,
+        btn__disabled,
     });
 
     return (

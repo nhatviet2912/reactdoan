@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { FaRegUser, FaUserGraduate, FaMoneyBillAlt, FaBook } from 'react-icons/fa';
+import { FaRegUser, FaUserGraduate, FaMoneyBillAlt, FaBook, FaUserCog } from 'react-icons/fa';
 import { CiHome } from 'react-icons/ci';
 import { MdOutlineWork } from 'react-icons/md';
 
@@ -48,7 +48,7 @@ const data = [
         name: 'Quản lý lương',
         icon: <FaMoneyBillAlt />,
         path: '/Salary',
-        role: false,
+        role: true,
     },
     {
         name: 'Hợp đồng',
@@ -61,6 +61,18 @@ const data = [
         icon: <MdOutlineWork />,
         path: '/Benefits',
         role: false,
+    },
+    {
+        name: 'Tài khoản',
+        icon: <FaUserCog />,
+        path: '/User',
+        role: false,
+    },
+    {
+        name: 'Chấm công',
+        icon: <MdOutlineWork />,
+        path: '/Attendance/DetailRole',
+        role: true,
     },
 ];
 

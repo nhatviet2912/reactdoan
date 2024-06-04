@@ -12,6 +12,7 @@ import ToastMessage from '~/components/toast-Message';
 import { formatVND } from '~/utils/helpers';
 import SalaryService from '~/service/SalaryService';
 import { checkAuth } from '~/utils/helpers/login';
+import SendMailService from '~/service/SendMailService';
 
 const cx = classNames.bind(styles);
 var currentDate = new Date();
@@ -23,6 +24,7 @@ function Salary() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
+    const [disabledBtn, setDisabledBtn] = useState(false);
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -40,6 +42,8 @@ function Salary() {
 
     useEffect(() => {
         checkAuth();
+        const allStatusOne = dataReponse.every((item) => item.Status === 1);
+        setDisabledBtn(allStatusOne);
     });
 
     async function getAll(Month, Year) {
@@ -61,7 +65,7 @@ function Salary() {
     };
 
     const showConfirm = (Id, Code) => {
-        var textMess = `Bạn có muốn xóa thanh toán lương cho nhân viên ${Code}?`;
+        var textMess = `Bạn có muốn thanh toán lương cho nhân viên ${Code}?`;
         setModalMessage({
             show: true,
             title: `Thanh toán lương`,
@@ -76,7 +80,11 @@ function Salary() {
     };
 
     const handleSave = async (Id) => {
+        var array = [];
+        var data = dataReponse.find((t) => t.Id === Id);
+        array.push(data);
         const res = await SalaryService.updateStatus(Id);
+        await SendMailService.send(array);
         const successMessage = {
             show: true,
             type: 'success',
@@ -96,11 +104,13 @@ function Salary() {
     };
 
     const handleUpdateStatusMany = async () => {
-        if (dataReponse.length > 0) {
+        const allStatusOne = dataReponse.every((item) => item.Status === 1);
+        if (!allStatusOne) {
             let Ids = dataReponse.map((item) => {
                 return item.Id;
             });
             let res = await SalaryService.updateStatusMany(Ids);
+            await SendMailService.send(dataReponse);
             const successMessage = {
                 show: true,
                 type: 'success',
@@ -117,6 +127,8 @@ function Salary() {
             setModalMessage({ show: false, title: '', message: '', Id: '', Ids: [] });
             setToastMessage(res.error === 0 ? successMessage : errorMessage);
             if (res.error === 0) getAll(currentDate.getMonth() + 1, currentDate.getFullYear());
+        } else {
+            setDisabledBtn(true);
         }
     };
 
@@ -186,7 +198,7 @@ function Salary() {
                                     ))}
                                 </select>
                             </label>
-                            <Button btn__primary onClick={handleUpdateStatusMany}>
+                            <Button btn__primary onClick={handleUpdateStatusMany} btn__disabled={disabledBtn}>
                                 Thanh toán hàng loạt
                             </Button>
                         </div>
@@ -201,11 +213,14 @@ function Salary() {
                                         <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
                                             Tên nhân viên
                                         </th>
-                                        <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
                                             Chức vụ
                                         </th>
-                                        <th className={cx('table__data-th')} style={{ minWidth: '300px' }}>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
                                             Phòng ban
+                                        </th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
+                                            Email
                                         </th>
                                         <th className={cx('table__data-th')}>Số ngày làm việc</th>
                                         <th className={cx('table__data-th')}>Lương theo ngày</th>
@@ -229,6 +244,7 @@ function Salary() {
                                                 <td>{item.EmployeeName}</td>
                                                 <td>{item.PositionName}</td>
                                                 <td>{item.DepartmentName}</td>
+                                                <td>{item.Email}</td>
                                                 <td>{item.DayWork}</td>
                                                 <td>{formatVND(item.SalaryDay)}</td>
                                                 <td>{formatVND(item.Amount)}</td>

@@ -11,6 +11,8 @@ import Home from '~/pages/Home';
 import Login from '~/pages/Login';
 import DefautLogin from '~/components/Layout/LayoutLogin';
 import SignIn from '~/pages/Login/SingIn';
+import User from '~/pages/User';
+import DetailsRole from '~/pages/Attendance/detailsRole';
 
 const publicRoutes = [
     { path: '/', components: Home },
@@ -20,9 +22,11 @@ const publicRoutes = [
     { path: '/Work', components: Work },
     { path: '/Attendance', components: Attendance },
     { path: '/Attendance/DetailMonth', components: DetailMonth },
+    { path: '/Attendance/DetailRole', components: DetailsRole },
     { path: '/Contract', components: Contract },
     { path: '/Salary', components: Salary },
     { path: '/Benefits', components: Benefits },
+    { path: '/User', components: User },
     { path: '/Login', components: Login, layout: DefautLogin },
     { path: '/SignIn', components: SignIn, layout: DefautLogin },
 ];

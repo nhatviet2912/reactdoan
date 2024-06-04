@@ -384,3 +384,20 @@
         left: 1%;
     }
 }
+
+.action__btn {
+    position: absolute;
+    right: 0;
+    width: 100px;
+    background-color: #ebebeb;
+    color: #333;
+    top: 28px;
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.action__btn > p:hover {
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}

@@ -58,9 +58,14 @@ class AttendanceService {
         return response;
     }
 
-    async getById(Id) {
+    async getDetailRole(Year, Month, Id) {
+        console.log(Id);
         var response = await axios
-            .get(`${url}/getById/${Id}`)
+            .post(`${url}/detailRole`, {
+                Year,
+                Month,
+                Id,
+            })
             .then((res) => {
                 if (res.data) {
                     return res.data;
@@ -124,6 +129,34 @@ class AttendanceService {
                 headers,
                 responseType: 'arraybuffer',
             })
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((error) => {
+                return error.response;
+            });
+        return response;
+    }
+
+    async updateDetailRow(data) {
+        var response = await axios
+            .post(`${url}/updateDetailRow`, data)
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((error) => {
+                return error.response;
+            });
+        return response;
+    }
+
+    async post(data) {
+        var response = await axios
+            .post(`${url}/create`, data)
             .then((res) => {
                 if (res.data) {
                     return res.data;
