@@ -20,7 +20,7 @@ function DetailMonth() {
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
+    const [recordsPerPage] = useState(20);
     const [titleHeader, setTitleHeader] = useState([]);
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
 
@@ -174,6 +174,23 @@ function DetailMonth() {
         setEditingCell(null);
     };
 
+    const handleExportExcel = async () => {
+        if (dataReponse.length > 0) {
+            console.log('hi');
+            let res = await AttendanceService.exportExcelMonth(
+                selectedValueStatus === '' ? currentDate.getMonth() + 1 : selectedValueStatus,
+                dataReponse,
+            );
+        } else {
+            setToastMessage({
+                show: true,
+                type: 'error',
+                message: 'Không có dữ liệu',
+                style: 'toast-error',
+            });
+        }
+    };
+
     const indexOfLastRecord = currentPage * recordsPerPage;
     const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
     const currentRecords = dataReponse.slice(indexOfFirstRecord, indexOfLastRecord);
@@ -204,9 +221,14 @@ function DetailMonth() {
                                     ))}
                                 </select>
                             </label>
-                            <Button btn__success onClick={handlePayroll}>
-                                Tính lương
-                            </Button>
+                            <div className={cx('d-flex-center')} style={{ columnGap: '12px' }}>
+                                <Button btn__success onClick={handleExportExcel}>
+                                    Xuất File
+                                </Button>
+                                <Button btn__success onClick={handlePayroll}>
+                                    Tính lương
+                                </Button>
+                            </div>
                         </div>
                         {dataReponse.length > 0 ? (
                             <>

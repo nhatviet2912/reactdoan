@@ -32,6 +32,20 @@ class LoginService {
         return response;
     }
 
+    async updateManager(id, role) {
+        var response = await axios
+            .put(`${url}/updateManager/${id}/${role}`)
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((error) => {
+                return error.response;
+            });
+        return response;
+    }
+
     async getAll() {
         var response = await axios
             .get(`${url}/getAll`)

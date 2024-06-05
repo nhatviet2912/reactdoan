@@ -140,6 +140,43 @@ class AttendanceService {
         return response;
     }
 
+    async exportMonth(year, selectedValueMonth, selectedValueStatus) {
+        let month = selectedValueMonth;
+        let DepartmentId = selectedValueStatus;
+        var response = await axios
+            .get(`${url}/exportMonth/${year}/${month}/${DepartmentId}`, {
+                headers,
+                responseType: 'arraybuffer',
+            })
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((error) => {
+                return error.response;
+            });
+        return response;
+    }
+
+    async exportExcelMonth(month, data) {
+        var response = await axios
+            .post(`${url}/exportExcelMonth/${month}`, {
+                headers,
+                responseType: 'arraybuffer',
+                data: data,
+            })
+            .then((res) => {
+                if (res.data) {
+                    return res.data;
+                }
+            })
+            .catch((error) => {
+                return error.response;
+            });
+        return response;
+    }
+
     async updateDetailRow(data) {
         var response = await axios
             .post(`${url}/updateDetailRow`, data)

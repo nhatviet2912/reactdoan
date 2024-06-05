@@ -22,7 +22,7 @@ function Salary() {
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
+    const [recordsPerPage] = useState(20);
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
     const [disabledBtn, setDisabledBtn] = useState(false);
     const [dataJson, setDataJson] = useState({});
@@ -206,9 +206,11 @@ function Salary() {
                                     ))}
                                 </select>
                             </label>
-                            <Button btn__primary onClick={handleUpdateStatusMany} btn__disabled={disabledBtn}>
-                                Thanh toán hàng loạt
-                            </Button>
+                            {dataJson.Id !== 2 && (
+                                <Button btn__primary onClick={handleUpdateStatusMany} btn__disabled={disabledBtn}>
+                                    Thanh toán hàng loạt
+                                </Button>
+                            )}
                         </div>
                         <div
                             className={cx('manager__container table-data')}
@@ -236,6 +238,7 @@ function Salary() {
                                             Số tiền đóng bảo hiểm
                                         </th>
                                         <th className={cx('table__data-th')}>Lương cơ bản</th>
+                                        <th className={cx('table__data-th')}>Hệ số lương</th>
                                         <th className={cx('table__data-th')}>Lương thực lãnh</th>
                                         {dataJson.Id !== 2 && (
                                             <>
@@ -261,6 +264,7 @@ function Salary() {
                                                 <td>{formatVND(item.SalaryDay)}</td>
                                                 <td>{formatVND(item.Amount)}</td>
                                                 <td>{formatVND(item.SalaryBasic)}</td>
+                                                <td>{item.SalaryCoefficient}</td>
                                                 <td>{formatVND(item.NetSalary)}</td>
                                                 {dataJson.Id !== 2 && (
                                                     <>

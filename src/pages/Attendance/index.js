@@ -25,6 +25,7 @@ function Attendance() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(10);
     const [titleHeader, setTitleHeader] = useState([]);
+    const [selectedValueMonth, setSelectedValueMonth] = useState('');
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -66,7 +67,7 @@ function Attendance() {
         setToastMessage(errorMessage);
     };
 
-    const handleExportTemplate = async () => {
+    const handleExportTemplateWeek = async () => {
         var now = new Date();
         var year = now.getFullYear();
         var month = now.getMonth() + 1;
@@ -91,11 +92,41 @@ function Attendance() {
             });
             return;
         }
-        downloadFile(res, 'FileMauChamCong.xlsx');
+        downloadFile(res, 'FileMauChamCongTuan.xlsx');
+    };
+
+    const handleExportTemplateMonth = async () => {
+        var now = new Date();
+        var year = now.getFullYear();
+        if (selectedValueMonth === '' || selectedValueStatus === '') {
+            setToastMessage({
+                show: true,
+                type: 'error',
+                message: 'Vui lòng chọn tháng để xuất File',
+                style: 'toast-error',
+            });
+            return;
+        }
+
+        var res = await AttendanceService.exportMonth(year, selectedValueMonth, selectedValueStatus);
+        if (res.status === 500 && res.status === 400 && res.status === 404) {
+            setToastMessage({
+                show: true,
+                type: 'error',
+                message: 'Xuất File không thành công',
+                style: 'toast-error',
+            });
+            return;
+        }
+        downloadFile(res, 'FileMauChamCongThang.xlsx');
     };
 
     const handleChangeStatus = async (e) => {
         setSelectedValueStatus(e.target.value);
+    };
+
+    const handleChangeMonth = (e) => {
+        setSelectedValueMonth(e.target.value);
     };
 
     async function getAllSelectDepartment() {
@@ -144,18 +175,12 @@ function Attendance() {
                                         ))}
                                     </select>
                                 </label>
-                                <Button btn__success effect onClick={handleExportTemplate}>
+                                <Button btn__success effect onClick={handleExportTemplateWeek}>
                                     <div className={cx('d-flex-center', 'px-4')}>
                                         <CiExport />
-                                        File chấm công tuần
+                                        File mẫu chấm công tuần
                                     </div>
                                 </Button>
-                                {/* <Button btn__success effect onClick={handleExportTemplate}>
-                                    <div className={cx('d-flex-center', 'px-4')}>
-                                        <CiExport />
-                                        File chấm công tháng
-                                    </div>
-                                </Button> */}
                             </div>
                             <Button btn__success effect onClick={handleButtonClick}>
                                 <div className={cx('d-flex-center', 'px-4')}>
@@ -172,7 +197,31 @@ function Attendance() {
                             />
                         </div>
 
-                        <div className={cx('d-flex-center')} style={{ margin: '12px 0', justifyContent: 'flex-end' }}>
+                        <div className={cx('d-flex-between')} style={{ margin: '12px 0' }}>
+                            <div>
+                                <label className={cx('label-dropdown')}>
+                                    <span style={{ marginRight: '40px' }}>Tháng</span>
+                                    <select
+                                        className={cx('dropdown')}
+                                        name="keyMonth"
+                                        id="keyMonth"
+                                        value={selectedValueMonth}
+                                        onChange={handleChangeMonth}
+                                        style={{ width: '200px' }}
+                                    >
+                                        <option value=""> -- Chọn tháng -- </option>
+                                        {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
+                                            <option key={month} value={month}>{`Tháng ${month}`}</option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <Button btn__success effect onClick={handleExportTemplateMonth}>
+                                    <div className={cx('d-flex-center', 'px-4')}>
+                                        <CiExport />
+                                        File mẫu chấm công tháng
+                                    </div>
+                                </Button>
+                            </div>
                             <Button
                                 btn__success
                                 effect

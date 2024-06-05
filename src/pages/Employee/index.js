@@ -517,9 +517,6 @@ function Employee() {
                                                 checked={checkedItems.length === currentRecords.length}
                                                 onChange={(e) => handleSelectAllChange(e.target.checked)}
                                             />
-                                            {/* {
-                                                var x = currentRecords.some
-                                            } */}
                                         </th>
                                         <th className={cx('table__data-th')}>Mã nhân viên</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>

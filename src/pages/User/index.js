@@ -66,6 +66,8 @@ function User() {
     const [recordsPerPage] = useState(10);
     const [dataById, setDataById] = useState(null);
     const [dataSelectOption, setdataSelectOption] = useState({});
+    const [isRole, setIsRole] = useState(false);
+    const [showOptions, setShowOptions] = useState([]);
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -128,8 +130,15 @@ function User() {
         setModalMessage({ show: false, title: '', message: '', Id: '' });
     };
 
-    const showConfirm = (Id, Code) => {
-        var textMess = `Bạn có muốn xóa thông tin ${namePage} có mã ${Code} khỏi hệ thống?`;
+    const showConfirm = (Id, Code, isRoles) => {
+        setIsRole(isRoles);
+        var text = '';
+        if (isRoles === true) {
+            text = 'quản lý';
+        } else {
+            text = 'nhân viên';
+        }
+        var textMess = `Bạn có cấp quyền cho nhân viên có mã ${Code} thành ${text} không`;
         setModalMessage({
             show: true,
             title: `Xóa thông tin ${namePage}`,
@@ -153,8 +162,8 @@ function User() {
         }
     };
 
-    const handleDelete = async (Id) => {
-        var res = await UserService.delete(Id);
+    const handleManager = async (Id) => {
+        var res = await UserService.updateManager(Id, 1);
         if (res.error === 0) {
             getAll();
             setModalMessage({ show: false, title: '', message: '', Id: '' });
@@ -164,10 +173,24 @@ function User() {
                 message: 'Thao tác thành công.',
                 style: 'toast-success',
             });
+            setShowOptions([]);
         }
     };
 
-    const [showOptions, setShowOptions] = useState([]);
+    const handleEmployee = async (Id) => {
+        var res = await UserService.updateManager(Id, 2);
+        if (res.error === 0) {
+            getAll();
+            setModalMessage({ show: false, title: '', message: '', Id: '' });
+            setToastMessage({
+                show: true,
+                type: 'success',
+                message: 'Thao tác thành công.',
+                style: 'toast-success',
+            });
+            setShowOptions([]);
+        }
+    };
 
     const handleClick = (index) => {
         const newShowOptions = [...showOptions];
@@ -255,13 +278,13 @@ function User() {
                                         <th className={cx('table__data-th')} style={{ minWidth: '150px' }}>
                                             Trạng thái
                                         </th>
-                                        <th className={cx('table__data-th')}>Thao tác</th>
+                                        <th className={cx('table__data-th')}>Cấp quyền</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {dataReponse.length > 0 &&
                                         currentRecords.map((item) => (
-                                            <tr key={item.Id}>
+                                            <tr key={item.IdUser}>
                                                 <td>{item.EmployeeCode}</td>
                                                 <td>{item.EmployeeName}</td>
                                                 <td>{item.PositionName}</td>
@@ -281,23 +304,34 @@ function User() {
                                                             borderRadius: '50%',
                                                             width: '25%',
                                                         }}
-                                                        onClick={() => handleClick(item.Id)}
+                                                        onClick={() => handleClick(item.IdUser)}
                                                     >
                                                         <TbAntennaBars1></TbAntennaBars1>
                                                     </div>
-                                                    {showOptions[item.Id] && (
+                                                    {showOptions[item.IdUser] && (
                                                         <div className={cx('action__btn')}>
                                                             <p
                                                                 style={{ textAlign: 'left', paddingLeft: '8px' }}
                                                                 onClick={showConfirm.bind(
                                                                     this,
-                                                                    item.Id,
+                                                                    item.IdUser,
                                                                     item.EmployeeCode,
+                                                                    true,
                                                                 )}
                                                             >
-                                                                Xóa
+                                                                Quản lý
                                                             </p>
-                                                            <p style={{ textAlign: 'left', paddingLeft: '8px' }}>Sửa</p>
+                                                            <p
+                                                                style={{ textAlign: 'left', paddingLeft: '8px' }}
+                                                                onClick={showConfirm.bind(
+                                                                    this,
+                                                                    item.IdUser,
+                                                                    item.EmployeeCode,
+                                                                    false,
+                                                                )}
+                                                            >
+                                                                Nhân viên
+                                                            </p>
                                                         </div>
                                                     )}
                                                 </td>
@@ -328,7 +362,9 @@ function User() {
                     title={modalMessage.title}
                     message={modalMessage.message}
                     onClose={handleCloseMess}
-                    onSuccess={() => handleDelete(modalMessage.Id)}
+                    onSuccess={() =>
+                        isRole === true ? handleManager(modalMessage.Id) : handleEmployee(modalMessage.Id)
+                    }
                 ></Message>
             )}
 

@@ -78,8 +78,11 @@ const data = [
 
 function Sidebar() {
     let json = JSON.parse(sessionStorage.getItem('Auth')) || [];
-    if (json) {
-        var filteredData = json?.Id === 1 ? data : data.filter((item) => item.role === true);
+    let filteredData;
+    if (json?.Id === 1) {
+        filteredData = data.filter((item) => item.path !== '/Attendance/DetailRole');
+    } else {
+        filteredData = data.filter((item) => item.role === true);
     }
     return (
         <div className={cx('leftbar__wrap')}>
