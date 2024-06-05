@@ -25,6 +25,7 @@ function Salary() {
     const [recordsPerPage] = useState(10);
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
     const [disabledBtn, setDisabledBtn] = useState(false);
+    const [dataJson, setDataJson] = useState({});
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -52,6 +53,13 @@ function Salary() {
             Year: parseInt(Year),
         };
         const getAllData = await SalaryService.get(data);
+        var json = JSON.parse(sessionStorage.getItem('Auth')) || null;
+        if (json.Id === 2) {
+            var dataDetail = getAllData.data.find((item) => item.EmployeeId === json.EmployeeId);
+            setData([dataDetail]);
+            setDataJson(json);
+            return;
+        }
         setData(getAllData.data);
     }
 
@@ -229,11 +237,15 @@ function Salary() {
                                         </th>
                                         <th className={cx('table__data-th')}>Lương cơ bản</th>
                                         <th className={cx('table__data-th')}>Lương thực lãnh</th>
-                                        <th className={cx('table__data-th')}>Trạng thái</th>
-                                        <th className={cx('table__data-th')} style={{ minWidth: '100px' }}>
-                                            Thanh toán
-                                        </th>
-                                        <th>Xem</th>
+                                        {dataJson.Id !== 2 && (
+                                            <>
+                                                <th className={cx('table__data-th')}>Trạng thái</th>
+                                                <th className={cx('table__data-th')} style={{ minWidth: '100px' }}>
+                                                    Thanh toán
+                                                </th>
+                                                <th>Xem</th>
+                                            </>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -250,22 +262,28 @@ function Salary() {
                                                 <td>{formatVND(item.Amount)}</td>
                                                 <td>{formatVND(item.SalaryBasic)}</td>
                                                 <td>{formatVND(item.NetSalary)}</td>
-                                                <td>{formartStatus(item.Status)}</td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    {item.Status === 0 ? (
-                                                        <Button
-                                                            btn__success
-                                                            onClick={() => showConfirm(item.Id, item.EmployeeCode)}
-                                                        >
-                                                            <FaCheckCircle />
-                                                        </Button>
-                                                    ) : (
-                                                        <FaCheckCircle style={{ cursor: 'no-drop' }} />
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    <FaEye></FaEye>
-                                                </td>
+                                                {dataJson.Id !== 2 && (
+                                                    <>
+                                                        <td>{formartStatus(item.Status)}</td>
+                                                        <td style={{ textAlign: 'center' }}>
+                                                            {item.Status === 0 ? (
+                                                                <Button
+                                                                    btn__success
+                                                                    onClick={() =>
+                                                                        showConfirm(item.Id, item.EmployeeCode)
+                                                                    }
+                                                                >
+                                                                    <FaCheckCircle />
+                                                                </Button>
+                                                            ) : (
+                                                                <FaCheckCircle style={{ cursor: 'no-drop' }} />
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            <FaEye />
+                                                        </td>
+                                                    </>
+                                                )}
                                             </tr>
                                         ))}
                                 </tbody>
