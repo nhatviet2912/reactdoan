@@ -4,18 +4,22 @@ import { useEffect, useState } from 'react';
 
 import ReportService from '~/service/ReportService';
 import { checkAuth } from '~/utils/helpers/login';
+import SalaryService from '~/service/SalaryService';
+import { formatVND } from '~/utils/helpers';
 
 const cx = classNames.bind(styles);
 function Home() {
     const [totalEmployee, setTotalEmployee] = useState(0);
     const [totalDepartment, setTotalDepartment] = useState(0);
     const [totalEmployeeOut, setTotalEmployeeOut] = useState(0);
+    const [totalSalary, setTotalSalary] = useState(0);
     const [dataJson, setDataJson] = useState({});
 
     useEffect(() => {
         getTotalEmployee();
         getTotalDepartment();
         getTotalEmployeeOut();
+        getTotalSalary();
     }, []);
 
     useEffect(() => {
@@ -39,12 +43,22 @@ function Home() {
         setTotalEmployeeOut(response.data);
     }
 
+    async function getTotalSalary() {
+        let response = await SalaryService.getTotal();
+        var totalSalary = parseInt(response.data.TotalNetSalary).toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        });
+        console.log(totalSalary);
+        setTotalSalary(totalSalary);
+    }
+
     return (
         <>
             {dataJson?.Id === 1 ? (
                 <div className={cx('main-content')}>
                     <div className={cx('page__title')}>
-                        <h4>Dashboard</h4>
+                        <h4>Trang chủ</h4>
                     </div>
 
                     <section className={cx('firts-section')}>
@@ -85,6 +99,21 @@ function Home() {
                                         <p className={cx('report__title--normal')}>Số nhân viên đã nghỉ việc</p>
                                         <h5 id="numberTeacher" className={cx('report__data')}>
                                             {totalEmployeeOut}
+                                        </h5>
+                                    </div>
+
+                                    <div className={cx('report__icon')}>
+                                        <i className="fad fa-chalkboard-teacher"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={cx('report__card', 'report__box')}>
+                                <div className={cx('report__box-header')}>
+                                    <div className={cx('report__container')}>
+                                        <p className={cx('report__title--normal')}>Tổng số tiền lương tháng</p>
+                                        <h5 id="numberTeacher" className={cx('report__data')}>
+                                            {totalSalary}
                                         </h5>
                                     </div>
 

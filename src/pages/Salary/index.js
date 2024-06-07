@@ -214,10 +214,10 @@ function Salary() {
                         </div>
                         <div
                             className={cx('manager__container table-data')}
-                            style={{ overflowX: 'scroll', height: '450px', marginTop: '36px' }}
+                            style={{ overflowX: 'scroll', height: '450px' }}
                         >
                             <table className={cx('table', 'table__data')}>
-                                <thead>
+                                <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
                                         <th className={cx('table__data-th')}>Mã nhân viên</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
@@ -239,6 +239,7 @@ function Salary() {
                                         </th>
                                         <th className={cx('table__data-th')}>Lương cơ bản</th>
                                         <th className={cx('table__data-th')}>Hệ số lương</th>
+                                        <th className={cx('table__data-th')}>Tiền thưởng</th>
                                         <th className={cx('table__data-th')}>Lương thực lãnh</th>
                                         {dataJson.Id !== 2 && (
                                             <>
@@ -265,6 +266,7 @@ function Salary() {
                                                 <td>{formatVND(item.Amount)}</td>
                                                 <td>{formatVND(item.SalaryBasic)}</td>
                                                 <td>{item.SalaryCoefficient}</td>
+                                                <td>{formatVND(item.AmountRecognition)}</td>
                                                 <td>{formatVND(item.NetSalary)}</td>
                                                 {dataJson.Id !== 2 && (
                                                     <>

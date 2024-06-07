@@ -13,6 +13,7 @@ import DefautLogin from '~/components/Layout/LayoutLogin';
 import SignIn from '~/pages/Login/SingIn';
 import User from '~/pages/User';
 import DetailsRole from '~/pages/Attendance/detailsRole';
+import Recognition from '~/pages/Recognition';
 
 const publicRoutes = [
     { path: '/', components: Home },
@@ -27,6 +28,7 @@ const publicRoutes = [
     { path: '/Salary', components: Salary },
     { path: '/Benefits', components: Benefits },
     { path: '/User', components: User },
+    { path: '/Recognition', components: Recognition },
     { path: '/Login', components: Login, layout: DefautLogin },
     { path: '/SignIn', components: SignIn, layout: DefautLogin },
 ];

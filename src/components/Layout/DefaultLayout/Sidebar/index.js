@@ -63,6 +63,12 @@ const data = [
         role: false,
     },
     {
+        name: 'Khen thưởng',
+        icon: <MdOutlineWork />,
+        path: '/Recognition',
+        role: false,
+    },
+    {
         name: 'Tài khoản',
         icon: <FaUserCog />,
         path: '/User',

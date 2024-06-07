@@ -63,7 +63,7 @@ function Benefits() {
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
+    const [recordsPerPage] = useState(20);
     const [dataById, setDataById] = useState(null);
     const [dataSelectOption, setdataSelectOption] = useState({});
 
@@ -194,7 +194,7 @@ function Benefits() {
                             style={{ overflowX: 'scroll', height: '450px', marginTop: '36px' }}
                         >
                             <table className={cx('table', 'table__data')}>
-                                <thead>
+                                <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
                                         <th className={cx('table__data-th')}>Mã bảo hiểm</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>
@@ -214,6 +214,9 @@ function Benefits() {
                                         </th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
                                             Lương cơ bản
+                                        </th>
+                                        <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
+                                            Hệ số lương
                                         </th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '180px' }}>
                                             Số tiền phải đóng
@@ -238,6 +241,7 @@ function Benefits() {
                                                 <td>{item.BenefitType}</td>
                                                 <td>{item.Percent}</td>
                                                 <td>{formatVND(item.SalaryBasic)}</td>
+                                                <td>{item.SalaryCoefficient}</td>
                                                 <td>{formatVND(item.SoTienPhaiDong)}</td>
                                                 <td>{item.Description}</td>
                                                 <td className={cx('table__data-td')}>

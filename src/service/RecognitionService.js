@@ -1,9 +1,9 @@
 import axios from 'axios';
 import config from '../config';
 
-var url = `${config.apiUrl}/salary`;
+var url = `${config.apiUrl}/Recognition`;
 
-class SalaryService {
+class RecognitionService {
     async getAll() {
         var response = await axios
             .get(`${url}`)
@@ -18,68 +18,9 @@ class SalaryService {
         return response;
     }
 
-    async get(data) {
-        var response = await axios
-            .post(`${url}/get`, data)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                return error.response;
-            });
-        return response;
-    }
-
-    async getTotal() {
-        var response = await axios
-            .get(`${url}/getTotal`)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                return error.response;
-            });
-        return response;
-    }
-
     async post(data) {
         var response = await axios
             .post(`${url}/create`, data)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                return error.response;
-            });
-        return response;
-    }
-
-    async updateStatus(Id) {
-        let data = {
-            Id,
-        };
-        var response = await axios
-            .post(`${url}/updateStatus`, data)
-            .then((res) => {
-                if (res.data) {
-                    return res.data;
-                }
-            })
-            .catch((error) => {
-                return error.response;
-            });
-        return response;
-    }
-
-    async updateStatusMany(Ids) {
-        var response = await axios
-            .post(`${url}/updateStatusMany`, Ids)
             .then((res) => {
                 if (res.data) {
                     return res.data;
@@ -151,4 +92,4 @@ class SalaryService {
     }
 }
 
-export default new SalaryService();
+export default new RecognitionService();

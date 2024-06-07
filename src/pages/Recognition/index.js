@@ -5,7 +5,6 @@ import debounce from 'lodash.debounce';
 
 import { FaPlus } from 'react-icons/fa6';
 import { FaCheckCircle, FaExclamationCircle, FaPen } from 'react-icons/fa';
-import { RiDeleteBin6Line } from 'react-icons/ri';
 
 import Button from '~/components/Button';
 import Input from '~/components/Input';
@@ -13,20 +12,37 @@ import FormModal from '~/components/Form';
 import Message from '~/components/Message';
 import Pagination from '~/components/Pagination';
 import ToastMessage from '~/components/toast-Message';
-import DepartmentService from '~/service/DepartmentService';
+import PositionService from '~/service/PositionService';
+import RecognitionService from '~/service/RecognitionService';
 import { checkAuth } from '~/utils/helpers/login';
+import EmployeeService from '~/service/EmployeeService';
+import { formatDate, formatVND, formartStatus, downloadFile } from '~/utils/helpers';
+
 
 const cx = classNames.bind(styles);
-let titleModal = 'Nhập thông tin phòng ban';
+var namePage = 'khen thưởng';
+let titleModal = `Nhập thông tin ${namePage}`;
+var nameSelectDepartment = 'EmployeeName';
 const labelArray = [
     {
-        title: 'Mã phòng ban',
-        name: 'DepartmentCode',
+        title: `Mã quyết định`,
+        name: 'RecognitionCode',
         isSelect: false,
     },
     {
-        title: 'Tên phòng ban:',
-        name: 'DepartmentName',
+        title: 'Nhân viên',
+        name: 'Recognition_employee',
+        isSelect: true,
+    },
+    {
+        title: 'Ngày',
+        name: 'Date',
+        isSelect: false,
+        type: 'date',
+    },
+    {
+        title: 'Số tiền thưởng',
+        name: 'Amount',
         isSelect: false,
     },
     {
@@ -36,7 +52,7 @@ const labelArray = [
     },
 ];
 
-function Home() {
+function Recognition() {
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState({ show: false, title: '', message: '', Id: '' });
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
@@ -44,6 +60,7 @@ function Home() {
     const [currentPage, setCurrentPage] = useState(1);
     const [recordsPerPage] = useState(20);
     const [dataById, setDataById] = useState(null);
+    const [dataSelectOption, setdataSelectOption] = useState({});
 
     useEffect(() => {
         if (toastMessage.show) {
@@ -56,6 +73,7 @@ function Home() {
     }, [toastMessage]);
 
     useEffect(() => {
+        getAll();
         getAllDepartments();
     }, []);
 
@@ -64,8 +82,7 @@ function Home() {
     });
 
     const handleSubmit = async (data, isEdit) => {
-        // console.log(isCreated);
-        const res = isEdit ? await DepartmentService.put(data.Id, data) : await DepartmentService.post(data);
+        const res = isEdit ? await RecognitionService.put(data.Id, data) : await RecognitionService.post(data);
 
         if (res.error === 0) {
             setModalOpen(false);
@@ -76,7 +93,7 @@ function Home() {
                 message: 'Thao tác thành công.',
                 style: 'toast-success',
             });
-            getAllDepartments();
+            getAll();
         } else {
             setToastMessage({
                 show: true,
@@ -87,9 +104,14 @@ function Home() {
         }
     };
 
-    async function getAllDepartments() {
-        const getAllData = await DepartmentService.getAllDepartments();
+    async function getAll() {
+        const getAllData = await RecognitionService.getAll();
         setData(getAllData.data);
+    }
+
+    async function getAllDepartments() {
+        const getAllData = await EmployeeService.getAll();
+        setdataSelectOption(getAllData.data);
     }
 
     const handleCloseModal = () => {
@@ -102,20 +124,20 @@ function Home() {
     };
 
     const showConfirm = (Id, Code) => {
-        var textMess = `Bạn có muốn xóa thông tin phòng ban có mã ${Code} khỏi hệ thống?`;
+        var textMess = `Bạn có muốn xóa thông tin ${namePage} có mã ${Code} khỏi hệ thống?`;
         setModalMessage({
             show: true,
-            title: 'Xóa thông tin phòng ban',
+            title: `Xóa thông tin ${namePage}`,
             message: textMess,
             Id: Id,
         });
     };
 
     const showFormEdit = async (Id) => {
-        const res = await DepartmentService.getById(Id);
+        const res = await PositionService.getById(Id);
         if (res.error === 0) {
-            setModalOpen(true);
             setDataById(res.data);
+            setModalOpen(true);
         } else {
             setToastMessage({
                 show: true,
@@ -127,9 +149,9 @@ function Home() {
     };
 
     const handleDelete = async (Id) => {
-        var res = await DepartmentService.delete(Id);
+        var res = await PositionService.delete(Id);
         if (res.error === 0) {
-            getAllDepartments();
+            getAll();
             setModalMessage({ show: false, title: '', message: '', Id: '' });
             setToastMessage({
                 show: true,
@@ -146,10 +168,10 @@ function Home() {
 
     const debouncedSearch = debounce(async (value) => {
         if (value !== '') {
-            const res = await DepartmentService.search(value);
+            const res = await PositionService.search(value);
             setData(res.data);
         } else {
-            getAllDepartments();
+            getAll();
         }
     }, 1000);
 
@@ -161,7 +183,7 @@ function Home() {
     return (
         <div className={cx('main-content')}>
             <div className={cx('page__title')}>
-                <h4>Quản lý phòng ban</h4>
+                <h4>Quản lý {namePage}</h4>
             </div>
             <section className={cx('firts-section')}>
                 <div className={cx('training')}>
@@ -170,7 +192,7 @@ function Home() {
                             <Button btn__success effect onClick={() => setModalOpen(true)}>
                                 <div className={cx('d-flex-center', 'px-4')}>
                                     <FaPlus />
-                                    Thêm phòng ban
+                                    Thêm {namePage}
                                 </div>
                             </Button>
                         </div>
@@ -190,20 +212,27 @@ function Home() {
                             <table className={cx('table', 'table__data')}>
                                 <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
-                                        <th className={cx('table__data-th')}>Mã phòng ban</th>
-                                        <th className={cx('table__data-th')}>Tên phòng ban</th>
+                                        <th className={cx('table__data-th')}>Số quyết định</th>
+                                        <th className={cx('table__data-th')}>Tên nhân viên</th>
+                                        <th className={cx('table__data-th')}>Chức vụ</th>
+                                        <th className={cx('table__data-th')}>Phòng ban</th>
+                                        <th className={cx('table__data-th')}>Ngày khen thưởng</th>
+                                        <th className={cx('table__data-th')}>Số tiền khen thưởng</th>
                                         <th className={cx('table__data-th')}>Mô tả</th>
-                                        <th className={cx('table__data-th')}>Thao tác</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {dataReponse.length > 0 &&
                                         currentRecords.map((item) => (
                                             <tr key={item.Id} onDoubleClickCapture={showFormEdit.bind(this, item.Id)}>
-                                                <td>{item.DepartmentCode}</td>
+                                                <td>{item.RecognitionCode}</td>
+                                                <td>{item.EmployeeName}</td>
+                                                <td>{item.PositionName}</td>
                                                 <td>{item.DepartmentName}</td>
+                                                <td>{formatDate(item.Date)}</td>
+                                                <td>{formatVND(item.Amount)}</td>
                                                 <td>{item.Descriptions}</td>
-                                                <td className={cx('table__data-td')}>
+                                                {/* <td className={cx('table__data-td')}>
                                                     <FaPen
                                                         style={{
                                                             marginRight: '12px',
@@ -214,9 +243,9 @@ function Home() {
                                                     />
                                                     <RiDeleteBin6Line
                                                         style={{ color: '#ff3d60', cursor: 'pointer' }}
-                                                        onClick={showConfirm.bind(this, item.Id, item.DepartmentCode)}
+                                                        onClick={showConfirm.bind(this, item.Id, item.PositionCode)}
                                                     />
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         ))}
                                 </tbody>
@@ -233,7 +262,9 @@ function Home() {
                     onSubmit={handleSubmit}
                     onClose={handleCloseModal}
                     labelsInput={labelArray}
+                    nameOption={nameSelectDepartment}
                     dataById={dataById}
+                    dataSelect={dataSelectOption}
                 ></FormModal>
             )}
 
@@ -265,4 +296,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Recognition;

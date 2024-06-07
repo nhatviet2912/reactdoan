@@ -68,7 +68,7 @@ function Contract() {
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
+    const [recordsPerPage] = useState(20);
     const [dataById, setDataById] = useState(null);
     const [dataSelectOption, setdataSelectOption] = useState({});
     const [errorMessage, setErrorMessage] = useState({});
@@ -284,7 +284,7 @@ function Contract() {
                             style={{ overflowX: 'scroll', height: '450px' }}
                         >
                             <table className={cx('table', 'table__data')}>
-                                <thead>
+                                <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                     <tr className={cx('table__data-tr')}>
                                         <th className={cx('table__data-th')}>Mã hợp đồng</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '200px' }}>

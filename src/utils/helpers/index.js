@@ -60,6 +60,9 @@ export function downloadFile(data, fileName) {
 }
 
 export function formatVND(number) {
+    if (number === null) {
+        return "";
+    }
     return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 }
 

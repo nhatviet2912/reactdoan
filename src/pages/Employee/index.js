@@ -65,6 +65,16 @@ const labelArray = [
         name: 'Address',
         isSelect: false,
     },
+    {
+        title: 'Trình độ',
+        name: 'EducationLevel',
+        isSelect: false,
+    },
+    {
+        title: 'Bằng cấp',
+        name: 'Degree',
+        isSelect: false,
+    },
 ];
 
 function Employee() {
@@ -80,7 +90,7 @@ function Employee() {
     const [toastMessage, setToastMessage] = useState({ show: false, type: '', message: '', style: '' });
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(20);
+    const [recordsPerPage] = useState(30);
     const [dataById, setDataById] = useState(null);
     const [dataSelectOption, setdataSelectOption] = useState({});
     const [selectedValueStatus, setSelectedValueStatus] = useState('');
@@ -316,6 +326,7 @@ function Employee() {
             Gender: '',
             PhoneNumber: '',
             Email: '',
+            DateOfBirth: '',
         };
 
         const mergedOb = Object.assign({}, dataExample, data);
@@ -331,6 +342,24 @@ function Employee() {
 
         if (mergedOb.Position_id === '') {
             newErrors.Position_id = 'Vui lòng chọn chức vụ';
+        }
+        if (mergedOb.DateOfBirth === '') {
+            newErrors.DateOfBirth = 'Vui lòng nhập ngày sinh';
+        } else {
+            // Chuyển đổi chuỗi ngày sinh sang dạng Date
+            const dob = new Date(mergedOb.DateOfBirth);
+
+            // Lấy ngày hiện tại
+            const today = new Date();
+
+            // Tính toán số năm đã trôi qua
+            const yearsDiff = today.getFullYear() - dob.getFullYear();
+            console.log(yearsDiff);
+
+            // Kiểm tra nếu người dùng chưa đủ 18 tuổi
+            if (yearsDiff < 18) {
+                newErrors.DateOfBirth = 'Ngày sinh phải lớn hơn 18 tuổi!';
+            }
         }
 
         if (mergedOb.Gender.trim() === '') {
@@ -533,6 +562,8 @@ function Employee() {
                                         <th className={cx('table__data-th')}>Email</th>
                                         <th className={cx('table__data-th')}>Số điện thoại</th>
                                         <th className={cx('table__data-th')}>Địa chỉ</th>
+                                        <th className={cx('table__data-th')}>Trình độ</th>
+                                        <th className={cx('table__data-th')}>Bằng cấp</th>
                                         <th className={cx('table__data-th')} style={{ minWidth: '150px' }}>
                                             Trạng thái
                                         </th>
@@ -580,6 +611,8 @@ function Employee() {
                                                 <td>{item.Email}</td>
                                                 <td>{item.PhoneNumber}</td>
                                                 <td>{item.Address}</td>
+                                                <td>{item.EducationLevel}</td>
+                                                <td>{item.Degree}</td>
                                                 <td>{formartStatus(item.Status)}</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <FaUserAltSlash
