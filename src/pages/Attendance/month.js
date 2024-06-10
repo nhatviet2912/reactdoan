@@ -1,6 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from '../../assets/css/main.module.scss';
 import { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 
 import { FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
@@ -174,21 +175,43 @@ function DetailMonth() {
         setEditingCell(null);
     };
 
-    const handleExportExcel = async () => {
-        if (dataReponse.length > 0) {
-            console.log('hi');
-            let res = await AttendanceService.exportExcelMonth(
-                selectedValueStatus === '' ? currentDate.getMonth() + 1 : selectedValueStatus,
-                dataReponse,
-            );
-        } else {
-            setToastMessage({
-                show: true,
-                type: 'error',
-                message: 'Không có dữ liệu',
-                style: 'toast-error',
+    const exportToExcel = () => {
+        const tableData = currentRecords.map((item) => {
+            const rowData = {
+                'Mã nhân viên': item.EmployeeCode,
+                'Tên nhân viên': item.EmployeeName,
+                'Chức vụ': item.PositionName,
+                'Phòng ban': item.DepartmentName,
+                'Số ngày làm việc': item.WorkDays,
+            };
+
+            titleHeader.forEach((day) => {
+                const dayNumber = parseInt(day.replace('Ngày ', ''));
+                const attendance = item.attendances.find((a) => a.Day === dayNumber && a.Status === 0);
+                rowData[`${day}/${selectedValueStatus === '' ? currentDate.getMonth() + 1 : selectedValueStatus}`] = attendance ? 'X' : 'O';
             });
-        }
+
+            return rowData;
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(tableData);
+
+        // Set the column widths
+        const wscols = [
+            { wpx: 100 }, // "Mã nhân viên" column width
+            { wpx: 200 }, // "Tên nhân viên" column width
+            { wpx: 200 }, // "Chức vụ" column width
+            { wpx: 150 }, // "Phòng ban" column width
+            { wpx: 80 }, // "Số ngày làm việc" column width
+            ...Array(titleHeader.length).fill({ wpx: 80 }), // Attendance columns width
+            
+        ];
+
+        worksheet['!cols'] = wscols;
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
+        XLSX.writeFile(workbook, `BangCongThang${selectedValueStatus === '' ? currentDate.getMonth() + 1 : selectedValueStatus}.xlsx`);
     };
 
     const indexOfLastRecord = currentPage * recordsPerPage;
@@ -222,7 +245,7 @@ function DetailMonth() {
                                 </select>
                             </label>
                             <div className={cx('d-flex-center')} style={{ columnGap: '12px' }}>
-                                <Button btn__success onClick={handleExportExcel}>
+                                <Button btn__success onClick={exportToExcel}>
                                     Xuất File
                                 </Button>
                                 <Button btn__success onClick={handlePayroll}>
@@ -237,7 +260,7 @@ function DetailMonth() {
                                     style={{ overflowX: 'scroll', height: '450px' }}
                                 >
                                     <table className={cx('table', 'table__data')}>
-                                        <thead>
+                                        <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                             <tr className={cx('table__data-tr')}>
                                                 <th className={cx('table__data-th')}>Mã nhân viên</th>
                                                 <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>

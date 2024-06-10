@@ -23,7 +23,7 @@ function Attendance() {
     const [dataSelectOption, setdataSelectOption] = useState([]);
     const [dataReponse, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [recordsPerPage] = useState(10);
+    const [recordsPerPage] = useState(20);
     const [titleHeader, setTitleHeader] = useState([]);
     const [selectedValueMonth, setSelectedValueMonth] = useState('');
 
@@ -47,6 +47,7 @@ function Attendance() {
     });
 
     const handleButtonClick = () => {
+        fileInputRef.current.value = '';
         fileInputRef.current.click();
     };
 
@@ -239,7 +240,7 @@ function Attendance() {
                                 style={{ overflowX: 'scroll', height: '450px' }}
                             >
                                 <table className={cx('table', 'table__data')}>
-                                    <thead>
+                                    <thead style={{ position: 'sticky', top: '0px', background: '#f1f5f7' }}>
                                         <tr className={cx('table__data-tr')}>
                                             <th className={cx('table__data-th')}>Mã nhân viên</th>
                                             <th className={cx('table__data-th')} style={{ minWidth: '250px' }}>

@@ -234,6 +234,16 @@ function Contract() {
             newErrors.ContractEndDate = 'Ngày kết thúc hợp đồng bắt buộc nhập';
         }
 
+        if (mergedOb.ContractStartDate !== '' && mergedOb.ContractEndDate !== '') {
+            const startDate = new Date(mergedOb.ContractStartDate);
+            const endDate = new Date(mergedOb.ContractEndDate);
+    
+            if (startDate > endDate) {
+                newErrors.ContractStartDate = 'Ngày ký hợp đồng không thể nhỏ hơn ngày kết thúc';
+                newErrors.ContractEndDate = 'Ngày kết thúc hợp đồng không hợp lệ';
+            }
+        }
+
         if (mergedOb.SalaryCoefficient !== '') {
             if (isNaN(mergedOb.SalaryCoefficient)) {
                 newErrors.SalaryCoefficient = 'Hệ số lương không hợp lệ! Vui lòng nhập số';
